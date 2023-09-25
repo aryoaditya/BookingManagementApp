@@ -2,10 +2,10 @@
 
 namespace API.Models;
 
-[Table(name: "tb_m_educations")]
+[Table(name: "tb_m_educations")]  // Anotasi nama tabel educations
 public class Education : BaseEntity
 {
-    [Column(name: "major", TypeName = "nvarchar(100)")]
+    [Column(name: "major", TypeName = "nvarchar(100)")] // Anotasi nama kolom dan tipe data untuk models
     public string Major { get; set; }
     [Column(name: "degree", TypeName = "nvarchar(100)")]
     public string Degree { get; set; }

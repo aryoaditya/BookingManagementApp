@@ -2,6 +2,7 @@
 
 namespace API.Utilities.Enums
 {
+    // Definisi tipe data enum untuk properti StatusLevel
     public enum StatusLevel
     {
         Requested,

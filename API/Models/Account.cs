@@ -2,10 +2,10 @@
 
 namespace API.Models
 {
-    [Table(name: "tb_m_accounts")]
+    [Table(name: "tb_m_accounts")]  // Anotasi nama tabel accounts
     public class Account : BaseEntity
     {
-        [Column(name: "password", TypeName = "nvarchar(max)")]
+        [Column(name: "password", TypeName = "nvarchar(max)")] // Anotasi nama kolom dan tipe data untuk models
         public string Password { get; set; }
         [Column(name: "otp")]
         public int Otp {  get; set; }

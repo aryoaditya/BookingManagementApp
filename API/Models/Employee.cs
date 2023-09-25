@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.Models
 {
-    [Table(name: "tb_m_employees")]
+    [Table(name: "tb_m_employees")]  // Anotasi nama tabel employees
     public class Employee : BaseEntity
     {
-        [Column(name: "nik", TypeName = "nchar(6)")]
+        [Column(name: "nik", TypeName = "nchar(6)")]  // Anotasi nama kolom dan tipe data untuk models
         public string Nik { get; set; }
         [Column(name: "first_name", TypeName = "nvarchar(100)")]
         public string FirstName { get; set; }
