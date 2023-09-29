@@ -13,4 +13,10 @@ public class Education : BaseEntity
     public float Gpa { get; set; }
     [Column(name: "university_guid")]
     public Guid UniversityGuid { get; set; }
+
+    // Cardinality
+    public Employee? Employee { get; set; }
+
+    public University? University { get; set; }
+
 }

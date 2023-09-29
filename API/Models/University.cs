@@ -10,4 +10,7 @@ public class University : BaseEntity
     public string Code { get; set; }
     [Column(name: "name", TypeName = "nvarchar(100)")]
     public string Name { get; set; }
+
+    // Cardinality
+    public ICollection<Education>? Educations { get; set; }
 }

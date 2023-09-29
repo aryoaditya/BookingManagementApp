@@ -13,5 +13,9 @@ namespace API.Models
         public bool IsUsed { get; set; }
         [Column(name: "expired_date")]
         public DateTime ExpiredDate { get; set; }
+
+        //Cardinality
+        public ICollection<AccountRole>? AccountRoles { get; set; }
+        public Employee? Employee { get; set; }
     }
 }
