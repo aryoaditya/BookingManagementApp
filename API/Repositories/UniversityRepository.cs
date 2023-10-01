@@ -30,17 +30,22 @@ namespace API.Repositories
         }
 
         // Menghapus entitas Universitas dari database
-        public bool Delete(University university)
+        public bool Delete(Guid guid)
         {
             try
             {
-                _context.Set<University>().Remove(university);
-                _context.SaveChanges();
-                return true; // Mengembalikan true jika penghapusan berhasil
+                var universityDelete = _context.Set<University>().Find(guid);
+                if (universityDelete != null)
+                {
+                    _context.Set<University>().Remove(universityDelete);
+                    _context.SaveChanges();
+                    return true; // Mengembalikan true jika penghapusan berhasil
+                }
+                return false; // Mengembalikan false jika data dengan GUID yang diberikan tidak ditemukan
             }
             catch
             {
-                return false; // Mengembalikan false jika terjadi kesalahan
+                return false; // Mengembalikan false jika terjadi kesalahan saat penghapusan
             }
         }
 

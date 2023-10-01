@@ -8,7 +8,7 @@ namespace API.Contracts
         University GetByGuid(Guid guid);
         University Create(University university);
         bool Update(University university);
-        bool Delete(University university);
+        bool Delete(Guid guid);
 
     }
 }
