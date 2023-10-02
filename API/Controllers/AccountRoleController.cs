@@ -1,5 +1,9 @@
 ﻿using API.Contracts;
+using API.DTOs.AccountRoles;
+using API.DTOs.Roles;
+using API.DTOs.Rooms;
 using API.Models;
+using API.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -25,7 +29,9 @@ namespace API.Controllers
                 return NotFound("Data Not Found"); // Mengembalikan pesan jika tidak ada data yang ditemukan
             }
 
-            return Ok(result);  // Mengembalikan data AccountRole jika ada
+            var data = result.Select(x => (AccountRoleDto)x);
+
+            return Ok(data);  // Mengembalikan data AccountRole jika ada
         }
 
         // HTTP GET untuk mengambil data AccountRole berdasarkan GUID
@@ -37,27 +43,36 @@ namespace API.Controllers
             {
                 return NotFound("Id Not Found"); // Mengembalikan pesan jika ID tidak ditemukan
             }
-            return Ok(result);  // Mengembalikan data AccountRole jika ditemukan
+            return Ok((AccountRoleDto)result);  // Mengembalikan data AccountRole jika ditemukan
         }
 
         // HTTP POST untuk membuat data AccountRole baru
         [HttpPost]
-        public IActionResult Create(AccountRole accountRole)
+        public IActionResult Create(CreateAccountRoleDto accountRoleDto)
         {
-            var result = _accountRoleRepository.Create(accountRole);
+            var result = _accountRoleRepository.Create(accountRoleDto);
             if (result is null)
             {
                 return BadRequest("Failed to create data"); // Mengembalikan pesan jika gagal membuat data
             }
 
-            return Ok(result); // Mengembalikan data AccountRole yang baru saja dibuat
+            return Ok((AccountRoleDto)result); // Mengembalikan data AccountRole yang baru saja dibuat
         }
 
         // HTTP PUT untuk memperbarui data AccountRole berdasarkan GUID
         [HttpPut("{guid}")]
-        public IActionResult Update(AccountRole accountRole)
+        public IActionResult Update(AccountRoleDto accountRoleDto)
         {
-            var result = _accountRoleRepository.Update(accountRole);
+            var entity = _accountRoleRepository.GetByGuid(accountRoleDto.Guid);
+            if (entity is null)
+            {
+                return NotFound("Id Not Found");
+            }
+
+            AccountRole toUpdate = accountRoleDto;
+            toUpdate.CreatedDate = entity.CreatedDate;
+
+            var result = _accountRoleRepository.Update(toUpdate);
             if (!result)
             {
                 return BadRequest("Failed to update data");  // Mengembalikan pesan jika gagal memperbarui data

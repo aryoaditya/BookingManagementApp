@@ -1,5 +1,9 @@
 ﻿using API.Contracts;
+using API.DTOs.Bookings;
+using API.DTOs.Roles;
+using API.DTOs.Rooms;
 using API.Models;
+using API.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -25,7 +29,9 @@ namespace API.Controllers
                 return NotFound("Data Not Found"); // Mengembalikan pesan jika tidak ada data yang ditemukan
             }
 
-            return Ok(result);  // Mengembalikan data Booking jika ada
+            var data = result.Select(x => (BookingDto)x);
+
+            return Ok(data);  // Mengembalikan data Booking jika ada
         }
 
         // HTTP GET untuk mengambil data Booking berdasarkan GUID
@@ -37,27 +43,36 @@ namespace API.Controllers
             {
                 return NotFound("Id Not Found"); // Mengembalikan pesan jika ID tidak ditemukan
             }
-            return Ok(result);  // Mengembalikan data Booking jika ditemukan
+            return Ok((BookingDto)result);  // Mengembalikan data Booking jika ditemukan
         }
 
         // HTTP POST untuk membuat data Booking baru
         [HttpPost]
-        public IActionResult Create(Booking booking)
+        public IActionResult Create(CreateBookingDto bookingDto)
         {
-            var result = _bookingRepository.Create(booking);
+            var result = _bookingRepository.Create(bookingDto);
             if (result is null)
             {
                 return BadRequest("Failed to create data"); // Mengembalikan pesan jika gagal membuat data
             }
 
-            return Ok(result); // Mengembalikan data Booking yang baru saja dibuat
+            return Ok((BookingDto)result); // Mengembalikan data Booking yang baru saja dibuat
         }
 
         // HTTP PUT untuk memperbarui data Booking berdasarkan GUID
         [HttpPut("{guid}")]
-        public IActionResult Update(Booking booking)
+        public IActionResult Update(BookingDto bookingDto)
         {
-            var result = _bookingRepository.Update(booking);
+            var entity = _bookingRepository.GetByGuid(bookingDto.Guid);
+            if (entity is null)
+            {
+                return NotFound("Id Not Found");
+            }
+
+            Booking toUpdate = bookingDto;
+            toUpdate.CreatedDate = entity.CreatedDate;
+
+            var result = _bookingRepository.Update(toUpdate);
             if (!result)
             {
                 return BadRequest("Failed to update data");  // Mengembalikan pesan jika gagal memperbarui data

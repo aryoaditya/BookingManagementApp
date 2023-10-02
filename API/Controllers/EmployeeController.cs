@@ -1,4 +1,6 @@
 ﻿using API.Contracts;
+using API.DTOs.Employees;
+using API.DTOs.Rooms;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +27,9 @@ namespace API.Controllers
                 return NotFound("Data Not Found"); // Mengembalikan pesan jika tidak ada data yang ditemukan
             }
 
-            return Ok(result);  // Mengembalikan data Employee jika ada
+            var data = result.Select(x => (EmployeeDto)x);
+
+            return Ok(data);  // Mengembalikan data Employee jika ada
         }
 
         // HTTP GET untuk mengambil data Employee berdasarkan GUID
@@ -37,27 +41,36 @@ namespace API.Controllers
             {
                 return NotFound("Id Not Found"); // Mengembalikan pesan jika ID tidak ditemukan
             }
-            return Ok(result);  // Mengembalikan data Employee jika ditemukan
+            return Ok((EmployeeDto)result);  // Mengembalikan data Employee jika ditemukan
         }
 
         // HTTP POST untuk membuat data Employee baru
         [HttpPost]
-        public IActionResult Create(Employee employee)
+        public IActionResult Create(CreateEmployeeDto employeeDto)
         {
-            var result = _employeeRepository.Create(employee);
+            var result = _employeeRepository.Create(employeeDto);
             if (result is null)
             {
                 return BadRequest("Failed to create data"); // Mengembalikan pesan jika gagal membuat data
             }
 
-            return Ok(result); // Mengembalikan data Employee yang baru saja dibuat
+            return Ok((EmployeeDto)result); // Mengembalikan data Employee yang baru saja dibuat
         }
 
         // HTTP PUT untuk memperbarui data Employee berdasarkan GUID
         [HttpPut("{guid}")]
-        public IActionResult Update(Employee employee)
+        public IActionResult Update(EmployeeDto employeeDto)
         {
-            var result = _employeeRepository.Update(employee);
+            var entity = _employeeRepository.GetByGuid(employeeDto.Guid);
+            if (entity is null)
+            {
+                return NotFound("Id Not Found");
+            }
+
+            Employee toUpdate = employeeDto;
+            toUpdate.CreatedDate = entity.CreatedDate;
+
+            var result = _employeeRepository.Update(toUpdate);
             if (!result)
             {
                 return BadRequest("Failed to update data");  // Mengembalikan pesan jika gagal memperbarui data

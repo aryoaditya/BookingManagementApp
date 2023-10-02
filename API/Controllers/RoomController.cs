@@ -1,4 +1,5 @@
 ﻿using API.Contracts;
+using API.DTOs.Rooms;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +26,9 @@ namespace API.Controllers
                 return NotFound("Data Not Found"); // Mengembalikan pesan jika tidak ada data yang ditemukan
             }
 
-            return Ok(result);  // Mengembalikan data Room jika ada
+            var data = result.Select(x => (RoomDto)x);
+
+            return Ok(data);  // Mengembalikan data Room jika ada
         }
 
         // HTTP GET untuk mengambil data Room berdasarkan GUID
@@ -37,27 +40,36 @@ namespace API.Controllers
             {
                 return NotFound("Id Not Found"); // Mengembalikan pesan jika ID tidak ditemukan
             }
-            return Ok(result);  // Mengembalikan data Room jika ditemukan
+            return Ok((RoomDto)result);  // Mengembalikan data Room jika ditemukan
         }
 
         // HTTP POST untuk membuat data Room baru
         [HttpPost]
-        public IActionResult Create(Room room)
+        public IActionResult Create(CreateRoomDto roomDto)
         {
-            var result = _roomRepository.Create(room);
+            var result = _roomRepository.Create(roomDto);
             if (result is null)
             {
                 return BadRequest("Failed to create data"); // Mengembalikan pesan jika gagal membuat data
             }
 
-            return Ok(result); // Mengembalikan data Room yang baru saja dibuat
+            return Ok((RoomDto)result); // Mengembalikan data Room yang baru saja dibuat
         }
 
         // HTTP PUT untuk memperbarui data Room berdasarkan GUID
-        [HttpPut("{guid}")]
-        public IActionResult Update(Room room)
+        [HttpPut]
+        public IActionResult Update(RoomDto roomDto)
         {
-            var result = _roomRepository.Update(room);
+            var entity = _roomRepository.GetByGuid(roomDto.Guid);
+            if (entity is null)
+            {
+                return NotFound("Id Not Found");
+            }
+
+            Room toUpdate = roomDto;
+            toUpdate.CreatedDate = entity.CreatedDate;
+
+            var result = _roomRepository.Update(toUpdate);
             if (!result)
             {
                 return BadRequest("Failed to update data");  // Mengembalikan pesan jika gagal memperbarui data
