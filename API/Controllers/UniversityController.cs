@@ -1,4 +1,5 @@
 ﻿using API.Contracts;
+using API.DTOs.Universities;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +26,15 @@ namespace API.Controllers
                 return NotFound("Data Not Found"); // Mengembalikan pesan jika tidak ada data yang ditemukan
             }
 
-            return Ok(result);  // Mengembalikan data Universitas jika ada
+            var data = result.Select(x => (UniversityDto)x);
+
+            /*var universityDto = new List<UniversityDto>();
+            foreach (var university in result)
+            {
+                universityDto.Add((UniversityDto) university);
+            }*/
+
+            return Ok(data);  // Mengembalikan data Universitas jika ada
         }
 
         // HTTP GET untuk mengambil data Universitas berdasarkan GUID
@@ -37,27 +46,36 @@ namespace API.Controllers
             {
                 return NotFound("Id Not Found"); // Mengembalikan pesan jika ID tidak ditemukan
             }
-            return Ok(result);  // Mengembalikan data Universitas jika ditemukan
+            return Ok((UniversityDto)result);  // Mengembalikan data Universitas jika ditemukan
         }
 
         // HTTP POST untuk membuat data Universitas baru
         [HttpPost]
-        public IActionResult Create(University university)
+        public IActionResult Create(CreateUniversityDto universityDto)
         {
-            var result = _universityRepository.Create(university);
+            var result = _universityRepository.Create(universityDto);
             if (result is null)
             {
                 return BadRequest("Failed to create data"); // Mengembalikan pesan jika gagal membuat data
             }
 
-            return Ok(result); // Mengembalikan data Universitas yang baru saja dibuat
+            return Ok((UniversityDto)result); // Mengembalikan data Universitas yang baru saja dibuat
         }
 
         // HTTP PUT untuk memperbarui data Universitas berdasarkan GUID
-        [HttpPut("{guid}")]
-        public IActionResult Update(University university)
+        [HttpPut]
+        public IActionResult Update(UniversityDto universityDto)
         {
-            var result = _universityRepository.Update(university);
+            var entity = _universityRepository.GetByGuid(universityDto.Guid);
+            if (entity is null)
+            {
+                return NotFound("Id Not Found");
+            }
+
+            University toUpdate = universityDto;
+            toUpdate.CreatedDate = entity.CreatedDate;
+
+            var result = _universityRepository.Update(toUpdate);
             if (!result)
             {
                 return BadRequest("Failed to update data");  // Mengembalikan pesan jika gagal memperbarui data

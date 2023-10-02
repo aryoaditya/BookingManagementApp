@@ -1,6 +1,6 @@
 ﻿namespace API.Contracts
 {
-    public interface IGeneralRepository<TEntity>// General class untuk contracts
+    public interface IGeneralRepository<TEntity> where TEntity : class// General class untuk contracts
     {
         IEnumerable<TEntity> GetAll();
         TEntity? GetByGuid(Guid guid);

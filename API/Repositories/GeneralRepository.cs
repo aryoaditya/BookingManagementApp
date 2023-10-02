@@ -34,14 +34,9 @@ namespace API.Repositories
         {
             try
             {
-                var universityDelete = _context.Set<TEntity>().Find(entity);
-                if (universityDelete != null)
-                {
-                    _context.Set<TEntity>().Remove(universityDelete);
-                    _context.SaveChanges();
-                    return true; // Mengembalikan true jika penghapusan berhasil
-                }
-                return false; // Mengembalikan false jika data dengan GUID yang diberikan tidak ditemukan
+                _context.Set<TEntity>().Remove(entity);
+                _context.SaveChanges();
+                return true;
             }
             catch
             {
@@ -58,7 +53,9 @@ namespace API.Repositories
         // Mendapatkan entitas berdasarkan GUID
         public TEntity? GetByGuid(Guid guid)
         {
-            return _context.Set<TEntity>().Find(guid);
+            var entity = _context.Set<TEntity>().Find(guid);
+            _context.ChangeTracker.Clear();
+            return entity;
         }
 
         // Memperbarui entitas dalam database
@@ -68,11 +65,11 @@ namespace API.Repositories
             {
                 _context.Set<TEntity>().Update(entity);
                 _context.SaveChanges();
-                return true; // Mengembalikan true jika pembaruan berhasil
+                return true;
             }
             catch
             {
-                return false; // Mengembalikan false jika terjadi kesalahan
+                return false; // Mengembalikan false jika terjadi kesalahan saat penghapusan
             }
         }
     }

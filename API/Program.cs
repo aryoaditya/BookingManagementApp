@@ -7,7 +7,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<BookingManagementDbContext>(option => option.UseSqlServer(connectionString));
+builder.Services.AddDbContext<BookingManagementDbContext>(options =>
+{
+    options.UseSqlServer(connectionString);
+    options.EnableSensitiveDataLogging();
+});
 
 // Add repositories to the container
 builder.Services.AddScoped<IUniversityRepository, UniversityRepository>();
