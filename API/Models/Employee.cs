@@ -26,6 +26,6 @@ namespace API.Models
         // Cardinality
         public Account? Account { get; set; }
         public Education? Education { get; set; }
-        public ICollection<Booking> Bookings { get; set; }
+        public ICollection<Booking>? Bookings { get; set; }
     }
 }
