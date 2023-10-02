@@ -9,6 +9,5 @@ namespace API.Contracts
         University Create(University university);
         bool Update(University university);
         bool Delete(Guid guid);
-
     }
 }
