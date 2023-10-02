@@ -1,9 +1,9 @@
 ﻿using API.Contracts;
 using API.Data;
-using API.Models;
 
 namespace API.Repositories
 {
+    // Implementasi interface IGeneralRepository
     public class GeneralRepository<TEntity> : IGeneralRepository<TEntity> where TEntity : class
     {
         private readonly BookingManagementDbContext _context;
@@ -30,11 +30,11 @@ namespace API.Repositories
         }
 
         // Menghapus entitas dari database
-        public bool Delete(Guid guid)
+        public bool Delete(TEntity entity)
         {
             try
             {
-                var universityDelete = _context.Set<TEntity>().Find(guid);
+                var universityDelete = _context.Set<TEntity>().Find(entity);
                 if (universityDelete != null)
                 {
                     _context.Set<TEntity>().Remove(universityDelete);

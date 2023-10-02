@@ -76,7 +76,7 @@ namespace API.Controllers
                 return NotFound("Id Not Found");
             }
 
-            var result = _educationRepository.Delete(guid);
+            var result = _educationRepository.Delete(existingEducation);
             if (!result)
             {
                 return BadRequest("Failed to delete data");  // Mengembalikan pesan jika gagal menghapus data

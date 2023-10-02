@@ -76,7 +76,7 @@ namespace API.Controllers
                 return NotFound("Id Not Found");
             }
 
-            var result = _employeeRepository.Delete(guid);
+            var result = _employeeRepository.Delete(existingEmployee);
             if (!result)
             {
                 return BadRequest("Failed to delete data");  // Mengembalikan pesan jika gagal menghapus data

@@ -76,7 +76,7 @@ namespace API.Controllers
                 return NotFound("Id Not Found");
             }
 
-            var result = _roleRepository.Delete(guid);
+            var result = _roleRepository.Delete(existingRole);
             if (!result)
             {
                 return BadRequest("Failed to delete data");  // Mengembalikan pesan jika gagal menghapus data

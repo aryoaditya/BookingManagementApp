@@ -4,14 +4,10 @@ using API.Models;
 
 namespace API.Repositories
 {
+    // Inherit dari GeneralRepository dan implementasi interface IAccountRepository
     public class AccountRepository : GeneralRepository<Account>, IAccountRepository
     {
-        private readonly BookingManagementDbContext _context;
-
         // Constructor
-        public AccountRepository(BookingManagementDbContext context) : base(context)
-        {
-           
-        }
+        public AccountRepository(BookingManagementDbContext context) : base(context) { }
     }
 }

@@ -6,12 +6,7 @@ namespace API.Repositories
 {
     public class AccountRoleRepository : GeneralRepository<AccountRole>, IAccountRoleRepository
     {
-        private readonly BookingManagementDbContext _context;
-
         // Constructor
-        public AccountRoleRepository(BookingManagementDbContext context) : base(context) 
-        {
-            _context = context;
-        }
+        public AccountRoleRepository(BookingManagementDbContext context) : base(context) { }
     }
 }
