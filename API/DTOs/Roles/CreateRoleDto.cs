@@ -7,6 +7,7 @@ namespace API.DTOs.Roles
     {
         public string Name { get; set; }
 
+        // Operator konversi implisit dari CreateRoleDto ke Role
         public static implicit operator Role(CreateRoleDto createRoleDto)
         {
             return new Role
