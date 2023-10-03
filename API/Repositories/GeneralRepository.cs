@@ -1,5 +1,6 @@
 ﻿using API.Contracts;
 using API.Data;
+using API.Utilities.Handlers;
 
 namespace API.Repositories
 {
@@ -29,9 +30,9 @@ namespace API.Repositories
                 _context.SaveChanges();
                 return entity; // Mengembalikan entitas yang baru saja dibuat
             }
-            catch
+            catch(Exception ex)
             {
-                return null; // Mengembalikan null jika terjadi kesalahan
+                throw new ExceptionHandler(ex.Message); // Mengembalikan null jika terjadi kesalahan
             }
         }
 

@@ -1,10 +1,9 @@
 ﻿using API.Contracts;
 using API.DTOs.Educations;
-using API.DTOs.Roles;
-using API.DTOs.Rooms;
 using API.Models;
-using API.Repositories;
+using API.Utilities.Handlers;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace API.Controllers
 {
@@ -26,12 +25,19 @@ namespace API.Controllers
             var result = _educationRepository.GetAll();
             if (!result.Any())
             {
-                return NotFound("Data Not Found"); // Mengembalikan pesan jika tidak ada data yang ditemukan
+                // Mengembalikan pesan jika tidak ada data yang ditemukan
+                return NotFound(new ResponseErrorHandler
+                {
+                    Code = StatusCodes.Status404NotFound,
+                    Status = HttpStatusCode.NotFound.ToString(),
+                    Message = "Data Not Found"
+                });
             }
 
             var data = result.Select(x => (EducationDto)x);
 
-            return Ok(data);  // Mengembalikan data Education jika ada
+            // Mengembalikan data Employee jika ada
+            return Ok(new ResponseOkHandler<IEnumerable<EducationDto>>(data));
         }
 
         // HTTP GET untuk mengambil data Education berdasarkan GUID
@@ -41,63 +47,110 @@ namespace API.Controllers
             var result = _educationRepository.GetByGuid(guid);
             if (result is null)
             {
-                return NotFound("Id Not Found"); // Mengembalikan pesan jika ID tidak ditemukan
+                // Mengembalikan pesan jika ID tidak ditemukan
+                return NotFound(new ResponseErrorHandler
+                {
+                    Code = StatusCodes.Status404NotFound,
+                    Status = HttpStatusCode.NotFound.ToString(),
+                    Message = "ID Not Found"
+                });
             }
-            return Ok((EducationDto)result);  // Mengembalikan data Education jika ditemukan
+            // Mengembalikan data Employee jika ditemukan
+            return Ok(new ResponseOkHandler<EducationDto>((EducationDto)result));
         }
 
         // HTTP POST untuk membuat data Education baru
         [HttpPost]
         public IActionResult Create(CreateEducationDto educationDto)
         {
-            var result = _educationRepository.Create(educationDto);
-            if (result is null)
+            try
             {
-                return BadRequest("Failed to create data"); // Mengembalikan pesan jika gagal membuat data
-            }
+                var result = _educationRepository.Create(educationDto);
 
-            return Ok((EducationDto)result); // Mengembalikan data Education yang baru saja dibuat
+                // Mengembalikan data Employee yang baru saja dibuat
+                return Ok(new ResponseOkHandler<EducationDto>((EducationDto)result));
+            }
+            catch (ExceptionHandler ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseErrorHandler
+                {
+                    Code = StatusCodes.Status500InternalServerError,
+                    Status = HttpStatusCode.InternalServerError.ToString(),
+                    Message = "Failed to create data",
+                    Error = ex.Message
+                });
+            }
+            
         }
 
         // HTTP PUT untuk memperbarui data Education berdasarkan GUID
         [HttpPut]
         public IActionResult Update(EducationDto educationDto)
         {
-            var entity = _educationRepository.GetByGuid(educationDto.Guid);
-            if (entity is null)
+            try
             {
-                return NotFound("Id Not Found");
+                var entity = _educationRepository.GetByGuid(educationDto.Guid);
+                if (entity is null)
+                {
+                    return NotFound(new ResponseErrorHandler
+                    {
+                        Code = StatusCodes.Status404NotFound,
+                        Status = HttpStatusCode.NotFound.ToString(),
+                        Message = "Id Not Found"
+                    });
+                }
+
+                Education toUpdate = educationDto;
+                toUpdate.CreatedDate = entity.CreatedDate;
+
+                _educationRepository.Update(toUpdate);
+
+                return Ok(new ResponseOkHandler<EducationDto>("Data updated successfully")); // Mengembalikan pesan sukses jika pembaruan berhasil
             }
-
-            Education toUpdate = educationDto;
-            toUpdate.CreatedDate = entity.CreatedDate;
-
-            var result = _educationRepository.Update(toUpdate);
-            if (!result)
+            catch (ExceptionHandler ex)
             {
-                return BadRequest("Failed to update data");  // Mengembalikan pesan jika gagal memperbarui data
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseErrorHandler
+                {
+                    Code = StatusCodes.Status500InternalServerError,
+                    Status = HttpStatusCode.InternalServerError.ToString(),
+                    Message = "Failed to update data",
+                    Error = ex.Message
+                });
             }
-
-            return Ok("Data updated successfully"); // Mengembalikan pesan sukses jika pembaruan berhasil
         }
 
         // HTTP DELETE untuk menghapus data Education berdasarkan GUID
         [HttpDelete("{guid}")]
         public IActionResult Delete(Guid guid)
         {
-            var existingEducation = _educationRepository.GetByGuid(guid);
-            if (existingEducation is null)
+            try
             {
-                return NotFound("Id Not Found");
-            }
+                var existingEducation = _educationRepository.GetByGuid(guid);
+                if (existingEducation is null)
+                {
+                    return NotFound(new ResponseErrorHandler
+                    {
+                        Code = StatusCodes.Status404NotFound,
+                        Status = HttpStatusCode.NotFound.ToString(),
+                        Message = "Id Not Found"
+                    });
+                }
 
-            var result = _educationRepository.Delete(existingEducation);
-            if (!result)
+                _educationRepository.Delete(existingEducation);
+
+                return Ok(new ResponseOkHandler<EducationDto>("Data deleted successfully"));  // Mengembalikan pesan sukses jika penghapusan berhasil
+            }
+            catch (ExceptionHandler ex)
             {
-                return BadRequest("Failed to delete data");  // Mengembalikan pesan jika gagal menghapus data
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseErrorHandler
+                {
+                    Code = StatusCodes.Status500InternalServerError,
+                    Status = HttpStatusCode.InternalServerError.ToString(),
+                    Message = "Failed to delete data",
+                    Error = ex.Message
+                });
             }
-
-            return Ok("Data deleted successfully");  // Mengembalikan pesan sukses jika penghapusan berhasil
+            
         }
 
     }
