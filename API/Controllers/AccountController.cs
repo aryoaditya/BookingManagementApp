@@ -4,6 +4,7 @@ using API.DTOs.Roles;
 using API.DTOs.Rooms;
 using API.Models;
 using API.Repositories;
+using API.Utilities.Handlers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -50,7 +51,9 @@ namespace API.Controllers
         [HttpPost]
         public IActionResult Create(CreateAccountDto accountDto)
         {
-            var result = _accountRepository.Create(accountDto);
+            Account toCreate = accountDto;
+            toCreate.Password = HashingHandler.HashPassword(accountDto.Password);
+            var result = _accountRepository.Create(toCreate);
             if (result is null)
             {
                 return BadRequest("Failed to create data"); // Mengembalikan pesan jika gagal membuat data
@@ -60,7 +63,7 @@ namespace API.Controllers
         }
 
         // HTTP PUT untuk memperbarui data Account berdasarkan GUID
-        [HttpPut("{guid}")]
+        [HttpPut]
         public IActionResult Update(AccountDto accountDto)
         {
             var entity = _accountRepository.GetByGuid(accountDto.Guid);
@@ -71,6 +74,7 @@ namespace API.Controllers
 
             Account toUpdate = accountDto;
             toUpdate.CreatedDate = entity.CreatedDate;
+            toUpdate.Password = HashingHandler.HashPassword(accountDto.Password);
 
             var result = _accountRepository.Update(toUpdate);
             if (!result)

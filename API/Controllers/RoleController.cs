@@ -59,7 +59,7 @@ namespace API.Controllers
         }
 
         // HTTP PUT untuk memperbarui data Role berdasarkan GUID
-        [HttpPut("{guid}")]
+        [HttpPut]
         public IActionResult Update(RoleDto roleDto)
         {
             var entity = _roleRepository.GetByGuid(roleDto.Guid);

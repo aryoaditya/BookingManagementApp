@@ -60,7 +60,7 @@ namespace API.Controllers
         }
 
         // HTTP PUT untuk memperbarui data AccountRole berdasarkan GUID
-        [HttpPut("{guid}")]
+        [HttpPut]
         public IActionResult Update(AccountRoleDto accountRoleDto)
         {
             var entity = _accountRoleRepository.GetByGuid(accountRoleDto.Guid);

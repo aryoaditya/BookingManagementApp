@@ -2,7 +2,9 @@
 using API.DTOs.Employees;
 using API.DTOs.Rooms;
 using API.Models;
+using API.Utilities.Handlers;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace API.Controllers
 {
@@ -48,6 +50,9 @@ namespace API.Controllers
         [HttpPost]
         public IActionResult Create(CreateEmployeeDto employeeDto)
         {
+            //Employee toCreate = employeeDto;
+            //toCreate.Nik = _generateHandler.GenerateNIK();
+
             var result = _employeeRepository.Create(employeeDto);
             if (result is null)
             {
@@ -58,7 +63,7 @@ namespace API.Controllers
         }
 
         // HTTP PUT untuk memperbarui data Employee berdasarkan GUID
-        [HttpPut("{guid}")]
+        [HttpPut]
         public IActionResult Update(EmployeeDto employeeDto)
         {
             var entity = _employeeRepository.GetByGuid(employeeDto.Guid);

@@ -60,7 +60,7 @@ namespace API.Controllers
         }
 
         // HTTP PUT untuk memperbarui data Education berdasarkan GUID
-        [HttpPut("{guid}")]
+        [HttpPut]
         public IActionResult Update(EducationDto educationDto)
         {
             var entity = _educationRepository.GetByGuid(educationDto.Guid);
