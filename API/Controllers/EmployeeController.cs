@@ -1,10 +1,8 @@
 ﻿using API.Contracts;
 using API.DTOs.Employees;
-using API.DTOs.Rooms;
 using API.Models;
 using API.Utilities.Handlers;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace API.Controllers
 {
@@ -50,10 +48,10 @@ namespace API.Controllers
         [HttpPost]
         public IActionResult Create(CreateEmployeeDto employeeDto)
         {
-            //Employee toCreate = employeeDto;
-            //toCreate.Nik = _generateHandler.GenerateNIK();
+            Employee toCreate = employeeDto;
+            toCreate.Nik = GenerateHandler.GenerateNIK(_employeeRepository.GetLastNik());
 
-            var result = _employeeRepository.Create(employeeDto);
+            var result = _employeeRepository.Create(toCreate);
             if (result is null)
             {
                 return BadRequest("Failed to create data"); // Mengembalikan pesan jika gagal membuat data
@@ -74,6 +72,7 @@ namespace API.Controllers
 
             Employee toUpdate = employeeDto;
             toUpdate.CreatedDate = entity.CreatedDate;
+            toUpdate.Nik = entity.Nik;
 
             var result = _employeeRepository.Update(toUpdate);
             if (!result)

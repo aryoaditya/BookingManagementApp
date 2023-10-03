@@ -38,7 +38,6 @@ namespace API.DTOs.Employees
             return new Employee
             {
                 Guid = employeeDto.Guid,
-                Nik = employeeDto.Nik,
                 FirstName = employeeDto.FirstName,
                 LastName = employeeDto.LastName,
                 BirthDate = employeeDto.BirthDate,

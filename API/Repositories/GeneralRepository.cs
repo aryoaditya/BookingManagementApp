@@ -14,6 +14,12 @@ namespace API.Repositories
             _context = context;
         }
 
+        // Akses _context ke derived class
+        protected BookingManagementDbContext GetContext()
+        {
+            return _context;
+        }
+
         // Membuat entitas baru dalam database
         public TEntity? Create(TEntity entity)
         {
