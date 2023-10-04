@@ -45,10 +45,11 @@ namespace API.Repositories
                 _context.SaveChanges();
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
-                return false; // Mengembalikan false jika terjadi kesalahan saat penghapusan
+                throw new ExceptionHandler(ex.InnerException?.Message ?? ex.Message);
             }
+            
         }
 
         // Mendapatkan semua entitas dalam database
@@ -74,9 +75,9 @@ namespace API.Repositories
                 _context.SaveChanges();
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
-                return false; // Mengembalikan false jika terjadi kesalahan saat penghapusan
+                throw new ExceptionHandler(ex.InnerException?.Message ?? ex.Message);
             }
         }
     }

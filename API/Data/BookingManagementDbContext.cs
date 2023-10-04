@@ -21,12 +21,12 @@ namespace API.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Membuat constraint unique
-            modelBuilder.Entity<Employee>().HasIndex(e => new {
-                e.Nik,
-                e.Email,
-                e.PhoneNumber
-            }).IsUnique();
+            modelBuilder.Entity<Employee>(entity =>
+            {
+                entity.HasIndex(e => e.Nik).IsUnique(); // Menambahkan constraint UNIQUE untuk NIK
+                entity.HasIndex(e => e.Email).IsUnique(); // Menambahkan constraint UNIQUE untuk Email
+                entity.HasIndex(e => e.PhoneNumber).IsUnique(); // Menambahkan constraint UNIQUE untuk PhoneNumber
+            });
 
             // One University has many Educations
             modelBuilder.Entity<University>()
