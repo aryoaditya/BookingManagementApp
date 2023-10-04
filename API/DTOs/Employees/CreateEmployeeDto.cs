@@ -5,16 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.DTOs.Employees
 {
-    public class CreateEmployeeDto
+    public class CreateEmployeeDto : GeneralEmployeeDto
     {
-        public string FirstName { get; set; }
-        public string? LastName { get; set; }
-        public DateTime BirthDate { get; set; }
-        public GenderLevel Gender { get; set; }
-        public DateTime HiringDate { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-
         // Operator konversi implisit dari CreateEmployeeDto ke Employee
         public static implicit operator Employee(CreateEmployeeDto createEmployeeDto)
         {

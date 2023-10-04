@@ -4,14 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.DTOs.Accounts
 {
-    public class CreateAccountDto
+    public class CreateAccountDto : GeneralAccounDto
     {
-        public Guid Guid { get; set; }
-        public string Password { get; set; }
-        public int Otp { get; set; }
-        public bool IsUsed { get; set; }
-        public DateTime ExpiredDate { get; set; }
-
         // Operator konversi implisit dari CreateAccountDto ke Account
         public static implicit operator Account(CreateAccountDto createAccountDto)
         {

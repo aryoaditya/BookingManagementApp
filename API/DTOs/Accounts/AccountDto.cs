@@ -2,14 +2,8 @@
 
 namespace API.DTOs.Accounts
 {
-    public class AccountDto
+    public class AccountDto : GeneralAccounDto
     {
-        public Guid Guid { get; set; }
-        public string Password { get; set; }
-        public int Otp { get; set; }
-        public bool IsUsed { get; set; }
-        public DateTime ExpiredDate { get; set; }
-
         // Operator konversi eksplisit dari Account ke AccountDto
         public static explicit operator AccountDto(Account account)
         {

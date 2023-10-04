@@ -2,11 +2,9 @@
 
 namespace API.DTOs.Universities
 {
-    public class UniversityDto
+    public class UniversityDto : GeneralUniversityDto
     {
         public Guid Guid { get; set; }
-        public string Code { get; set; }
-        public string Name { get; set; }
 
         // Operator eksplisit yang mengkonversi objek University ke UniversityDto
         public static explicit operator UniversityDto(University university)

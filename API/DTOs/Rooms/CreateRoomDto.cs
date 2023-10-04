@@ -2,12 +2,8 @@
 
 namespace API.DTOs.Rooms
 {
-    public class CreateRoomDto
+    public class CreateRoomDto : GeneralRoomDto
     {
-        public string Name { get; set; }
-        public int Floor { get; set; }
-        public int Capacity { get; set; }
-
         // Operator konversi implisit dari CreateRoomDto ke Room
         public static implicit operator Room(CreateRoomDto createRoomDto)
         {

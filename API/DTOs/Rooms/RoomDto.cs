@@ -3,12 +3,9 @@ using API.Models;
 
 namespace API.DTOs.Rooms
 {
-    public class RoomDto
+    public class RoomDto : GeneralRoomDto
     {
         public Guid Guid { get; set; }
-        public string Name { get; set; }
-        public int Floor { get; set; }
-        public int Capacity { get; set; }
 
         // Operator konversi eksplisit dari Room ke RoomDto
         public static explicit operator RoomDto(Room room)

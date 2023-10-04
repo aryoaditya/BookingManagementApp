@@ -2,13 +2,9 @@
 
 namespace API.DTOs.Educations
 {
-    public class EducationDto
+    public class EducationDto : GeneralEducationDto
     {
         public Guid Guid { get; set; }
-        public string Major { get; set; }
-        public string Degree { get; set; }
-        public float Gpa { get; set; }
-        public Guid UniversityGuid { get; set; }
 
         // Operator konversi eksplisit dari Education ke EducationDto
         public static explicit operator EducationDto(Education education)

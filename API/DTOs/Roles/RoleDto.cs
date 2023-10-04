@@ -3,10 +3,9 @@ using API.Models;
 
 namespace API.DTOs.Roles
 {
-    public class RoleDto
+    public class RoleDto : GeneralRoleDto
     {
         public Guid Guid { get; set; }
-        public string Name { get; set; }
 
         // Operator konversi eksplisit dari Role ke RoleDto
         public static explicit operator RoleDto(Role role)

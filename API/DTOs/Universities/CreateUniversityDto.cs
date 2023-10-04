@@ -2,10 +2,9 @@
 
 namespace API.DTOs.Universities
 {
-    public class CreateUniversityDto
+    public class CreateUniversityDto : GeneralUniversityDto
     {
         public string Code { get; set; }
-        public string Name { get; set; }
 
         // Operator implisit yang memungkinkan konversi dari CreateUniversityDto ke University.
         public static implicit operator University(CreateUniversityDto createUniversityDto)

@@ -2,11 +2,9 @@
 
 namespace API.DTOs.AccountRoles
 {
-    public class AccountRoleDto
+    public class AccountRoleDto : GeneralAccountRoleDto
     {
         public Guid Guid { get; set; }
-        public Guid AccountGuid { get; set; }
-        public Guid RoleGuid { get; set; }
 
         // Operator konversi eksplisit dari AccountRole ke AccountRoleDto
         public static explicit operator AccountRoleDto(AccountRole accountRole)

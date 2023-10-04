@@ -3,11 +3,8 @@ using API.Models;
 
 namespace API.DTOs.AccountRoles
 {
-    public class CreateAccountRoleDto
+    public class CreateAccountRoleDto : GeneralAccountRoleDto
     {
-        public Guid AccountGuid { get; set; }
-        public Guid RoleGuid { get; set; }
-
         // Operator konversi implisit dari CreateAccountRoleDto ke AccountRole
         public static implicit operator AccountRole(CreateAccountRoleDto createAccountRoleDto)
         {

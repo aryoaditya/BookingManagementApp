@@ -5,15 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.DTOs.Bookings
 {
-    public class CreateBookingDto
+    public class CreateBookingDto : GeneralBookingDto
     {
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public StatusLevel Status { get; set; }
-        public string Remarks { get; set; }
-        public Guid RoomGuid { get; set; }
-        public Guid EmployeeGuid { get; set; }
-
         // Operator konversi implisit dari CreateBookingDto ke Booking
         public static implicit operator Booking(CreateBookingDto createBookingDto)
         {

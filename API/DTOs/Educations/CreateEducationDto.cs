@@ -4,13 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.DTOs.Educations
 {
-    public class CreateEducationDto
+    public class CreateEducationDto : GeneralEducationDto
     {
-        public string Major { get; set; }
-        public string Degree { get; set; }
-        public float Gpa { get; set; }
-        public Guid UniversityGuid { get; set; }
-
         // Operator konversi implisit dari CreateEducationDto ke Education
         public static implicit operator Education(CreateEducationDto createEducationDto)
         {
