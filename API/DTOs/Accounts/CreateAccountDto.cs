@@ -1,6 +1,4 @@
-﻿using API.DTOs.Bookings;
-using API.Models;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using API.Models;
 
 namespace API.DTOs.Accounts
 {

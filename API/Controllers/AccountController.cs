@@ -5,6 +5,7 @@ using API.Models;
 using API.Utilities.Handlers;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using API.Utilities.Validators.Accounts;
 
 namespace API.Controllers
 {
@@ -29,37 +30,50 @@ namespace API.Controllers
         [HttpPost("login")]
         public IActionResult Login(LoginDto loginDto)
         {
-            // Cari Employee berdasarkan alamat email
-            var employee = _employeeRepository.GetByEmail(loginDto.Email);
-
-            if (employee == null)
+            try
             {
-                // Tidak ada Employee dengan email yang cocok
-                return Unauthorized(new ResponseErrorHandler
+                // Cari Employee berdasarkan alamat email
+                var employee = _employeeRepository.GetByEmail(loginDto.Email);
+
+                if (employee == null)
                 {
-                    Code = StatusCodes.Status401Unauthorized,
-                    Status = HttpStatusCode.Unauthorized.ToString(),
-                    Message = "Account or Password is invalid"
+                    // Tidak ada Employee dengan email yang cocok
+                    return Unauthorized(new ResponseErrorHandler
+                    {
+                        Code = StatusCodes.Status401Unauthorized,
+                        Status = HttpStatusCode.Unauthorized.ToString(),
+                        Message = "Account or Password is invalid"
+                    });
+                }
+
+                // Verifikasi kata sandi
+                var account = _accountRepository.GetByEmployeeGuid(employee.Guid);
+                var loginPass = HashingHandler.VerifyPassword(loginDto.Password, account.Password);
+
+                if (account == null || !loginPass)
+                {
+                    // Password tidak valid
+                    return Unauthorized(new ResponseErrorHandler
+                    {
+                        Code = StatusCodes.Status401Unauthorized,
+                        Status = HttpStatusCode.Unauthorized.ToString(),
+                        Message = "Account or Password is invalid"
+                    });
+                }
+
+                // Jika login berhasil,
+                return Ok(new ResponseOkHandler<LoginDto>("Login success"));
+            }
+            catch (ExceptionHandler ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseErrorHandler
+                {
+                    Code = StatusCodes.Status500InternalServerError,
+                    Status = HttpStatusCode.InternalServerError.ToString(),
+                    Message = "Failed to login",
+                    Error = ex.Message
                 });
             }
-
-            // Verifikasi kata sandi
-            var account = _accountRepository.GetByEmployeeGuid(employee.Guid);
-            var loginPass = HashingHandler.VerifyPassword(loginDto.Password, account.Password);
-
-            if (account == null || !loginPass)
-            {
-                // Password tidak valid
-                return Unauthorized(new ResponseErrorHandler
-                {
-                    Code = StatusCodes.Status401Unauthorized,
-                    Status = HttpStatusCode.Unauthorized.ToString(),
-                    Message = "Account or Password is invalid"
-                });
-            }
-
-            // Jika login berhasil,
-            return Ok(new ResponseOkHandler<LoginDto>("Login success"));
         }
 
         // Endpoint untuk Forgot Password
@@ -69,10 +83,7 @@ namespace API.Controllers
             try
             {
                 // Get employee by email
-                var employee = _employeeRepository.GetByEmail(forgotPasswordDto.Email);
-
-                // Get account dari Guid employee
-                var account = _accountRepository.GetByGuid(employee.Guid);
+                Employee? employee = _employeeRepository.GetByEmail(forgotPasswordDto.Email);
 
                 if (employee == null)
                 {
@@ -81,9 +92,12 @@ namespace API.Controllers
                     {
                         Code = StatusCodes.Status404NotFound,
                         Status = HttpStatusCode.NotFound.ToString(),
-                        Message = "Employee Not Found"
+                        Message = "Account Not Found"
                     });
                 }
+
+                // Get account dari Guid employee
+                var account = _accountRepository.GetByGuid(employee.Guid);                
 
                 // Buat OTP secara acak
                 var otp = _accountRepository.GenerateRandomOtp();
@@ -91,16 +105,14 @@ namespace API.Controllers
                 Account toUpdate = account;
                 toUpdate.Otp = otp;
                 toUpdate.ExpiredDate = DateTime.Now.AddMinutes(5); // Token kedaluwarsa dalam 5 menit
+                toUpdate.IsUsed = false;
 
                 _accountRepository.Update(toUpdate);
 
-                return Ok(new ResponseOkHandler<AccountDto>((AccountDto)toUpdate));
-
-                //return Ok(new ResponseOkHandler<EmployeeDto>("OTP has been sent to your email or phone."));
+                return Ok(new ResponseOkHandler<ForgotPasswordDto>("OTP has been sent to your email or phone."));
             }
-            catch (Exception ex)
+            catch (ExceptionHandler ex)
             {
-                // Handle kesalahan jika terjadi
                 return StatusCode(StatusCodes.Status500InternalServerError, new ResponseErrorHandler
                 {
                     Code = StatusCodes.Status500InternalServerError,
@@ -154,7 +166,7 @@ namespace API.Controllers
 
                 return Ok(new ResponseOkHandler<EmployeeDto>((EmployeeDto)newEmployee));
             }
-            catch (Exception ex)
+            catch (ExceptionHandler ex)
             {
                 // Rollback transaksi jika terjadi kesalahan
                 transaction.Rollback();
@@ -164,6 +176,91 @@ namespace API.Controllers
                     Code = StatusCodes.Status500InternalServerError,
                     Status = HttpStatusCode.InternalServerError.ToString(),
                     Message = "Failed to register",
+                    Error = ex.Message
+                });
+            }
+        }
+
+        // Endpoint untuk Change Password
+        [HttpPost("change-password")]
+        public IActionResult ChangePassword(ChangePasswordDto changePasswordDto)
+        {
+            try
+            {
+                // Mendapatkan Employee berdasarkan email
+                var employee = _employeeRepository.GetByEmail(changePasswordDto.Email);
+
+                // Dapatkan Account berdasarkan email
+                var account = _accountRepository.GetByGuid(employee.Guid);
+
+                if (account == null)
+                {
+                    return BadRequest(new ResponseErrorHandler
+                    {
+                        Code = StatusCodes.Status400BadRequest,
+                        Status = HttpStatusCode.BadRequest.ToString(),
+                        Message = "Account not found"
+                    });
+                }
+
+                // Periksa apakah OTP benar
+                if (account.Otp != changePasswordDto.Otp)
+                {
+                    return BadRequest(new ResponseErrorHandler
+                    {
+                        Code = StatusCodes.Status400BadRequest,
+                        Status = HttpStatusCode.BadRequest.ToString(),
+                        Message = "Invalid OTP"
+                    });
+                }
+
+                // Periksa apakah OTP sudah digunakan
+                if (account.IsUsed)
+                {
+                    return BadRequest(new ResponseErrorHandler
+                    {
+                        Code = StatusCodes.Status400BadRequest,
+                        Status = HttpStatusCode.BadRequest.ToString(),
+                        Message = "OTP already used"
+                    });
+                }
+
+                // Periksa apakah OTP sudah kadaluarsa
+                if (account.ExpiredDate < DateTime.Now)
+                {
+                    return BadRequest(new ResponseErrorHandler
+                    {
+                        Code = StatusCodes.Status400BadRequest,
+                        Status = HttpStatusCode.BadRequest.ToString(),
+                        Message = "OTP has expired"
+                    });
+                }
+
+                // Periksa apakah NewPassword dan ConfirmPassword sama
+                if (changePasswordDto.NewPassword != changePasswordDto.ConfirmPassword)
+                {
+                    return BadRequest(new ResponseErrorHandler
+                    {
+                        Code = StatusCodes.Status400BadRequest,
+                        Status = HttpStatusCode.BadRequest.ToString(),
+                        Message = "New password and confirm password do not match"
+                    });
+                }
+
+                // Update password dan tandai OTP sebagai digunakan
+                account.Password = HashingHandler.HashPassword(changePasswordDto.NewPassword);
+                _accountRepository.Update(account);
+                account.IsUsed = true;
+
+                return Ok(new ResponseOkHandler<string>("Password changed successfully"));
+            }
+            catch (ExceptionHandler ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseErrorHandler
+                {
+                    Code = StatusCodes.Status500InternalServerError,
+                    Status = HttpStatusCode.InternalServerError.ToString(),
+                    Message = "Failed to change password",
                     Error = ex.Message
                 });
             }
