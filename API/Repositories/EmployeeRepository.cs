@@ -1,8 +1,7 @@
 ﻿using API.Contracts;
 using API.Data;
 using API.Models;
-using Microsoft.EntityFrameworkCore;
-using static System.Net.Mime.MediaTypeNames;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace API.Repositories
 {
@@ -11,6 +10,7 @@ namespace API.Repositories
         // Constructor
         public EmployeeRepository(BookingManagementDbContext context) : base(context) { }
 
+        // Mendapatkan Nik terakhir
         public string? GetLastNik()
         {
             var lastNik = GetContext().Set<Employee>()
@@ -18,6 +18,20 @@ namespace API.Repositories
                 .FirstOrDefault()?.Nik;
 
             return lastNik;
+        }
+
+        // Mulai transaksi
+        public IDbContextTransaction BeginTransaction()
+        {
+            return GetContext().Database.BeginTransaction();
+        }
+
+        // Mendapatkan Email Employee
+        public Employee? GetByEmail(string email)
+        {
+            // Menggunakan LINQ untuk mencari Employee berdasarkan email
+            return GetContext().Set<Employee>()
+                .FirstOrDefault(e => e.Email == email);
         }
     }
 }
