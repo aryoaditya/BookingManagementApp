@@ -15,7 +15,9 @@ namespace API.Utilities.Validators.Accounts
                 .NotEmpty();
 
             RuleFor(x => x.NewPassword)
-                .NotEmpty();
+                .NotEmpty().WithMessage("Password is required")
+                .MinimumLength(8).WithMessage("Password must be at least 8 characters long")
+                .Matches("[0-9]").WithMessage("Password must contain at least one digit");
 
             RuleFor(x => x.ConfirmPassword)
                 .Equal(x => x.NewPassword)
