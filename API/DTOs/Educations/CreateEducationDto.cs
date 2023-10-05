@@ -11,6 +11,7 @@ namespace API.DTOs.Educations
         {
             return new Education
             {
+                Guid = createEducationDto.Guid,
                 Major = createEducationDto.Major,
                 Degree = createEducationDto.Degree,
                 Gpa = createEducationDto.Gpa,

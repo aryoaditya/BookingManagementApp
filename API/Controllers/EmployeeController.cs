@@ -1,8 +1,10 @@
 ﻿using API.Contracts;
 using API.DTOs.Employees;
 using API.Models;
+using API.Repositories;
 using API.Utilities.Handlers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 
 namespace API.Controllers
@@ -12,10 +14,54 @@ namespace API.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly IEducationRepository _educationRepository;
+        private readonly IUniversityRepository _universityRepository;
 
-        public EmployeeController(IEmployeeRepository employeeRepository)
+        public EmployeeController(IEmployeeRepository employeeRepository, IEducationRepository educationRepository, IUniversityRepository universityRepository)
         {
             _employeeRepository = employeeRepository;
+            _educationRepository = educationRepository;
+            _universityRepository = universityRepository;
+        }
+
+        // Endpoint untuk menampilkan detail Employee dengan join
+        [HttpGet("details")]
+        public IActionResult GetDetails()
+        {
+            var employees = _employeeRepository.GetAll();
+            var educations = _educationRepository.GetAll();
+            var universities = _universityRepository.GetAll();
+
+            if (!(employees.Any() && educations.Any() && universities.Any()))
+            {
+                return NotFound(new ResponseErrorHandler
+                {
+                    Code = StatusCodes.Status404NotFound,
+                    Status = HttpStatusCode.NotFound.ToString(),
+                    Message = "Data Not Found"
+                });
+            }
+
+            var employeeDetails = from emp in employees
+                                  join edu in educations on emp.Guid equals edu.Guid
+                                  join unv in universities on edu.UniversityGuid equals unv.Guid
+                                  select new EmployeeDetailDto
+                                  {
+                                      Guid = emp.Guid,
+                                      Nik = emp.Nik,
+                                      FullName = string.Concat(emp.FirstName, " ", emp.LastName),
+                                      BirthDate = emp.BirthDate,
+                                      Gender = emp.Gender.ToString(),
+                                      HiringDate = emp.HiringDate,
+                                      Email = emp.Email,
+                                      PhoneNumber = emp.PhoneNumber,
+                                      Major = edu.Major,
+                                      Degree = edu.Degree,
+                                      Gpa = edu.Gpa,
+                                      University = unv.Name
+                                  };
+
+            return Ok(new ResponseOkHandler<IEnumerable<EmployeeDetailDto>>(employeeDetails));
         }
 
         // HTTP GET untuk mengambil semua data Employee
@@ -25,7 +71,7 @@ namespace API.Controllers
             var result = _employeeRepository.GetAll();
             if (!result.Any())
             {
-                // Mengembalikan pesan jika tidak ada data yang ditemukan
+                // Mengembalikan pesan jika tidak ada data yang ditemukan menggunakan error handler
                 return NotFound(new ResponseErrorHandler
                 {
                     Code = StatusCodes.Status404NotFound,
@@ -36,7 +82,7 @@ namespace API.Controllers
 
             var data = result.Select(x => (EmployeeDto)x);
 
-            // Mengembalikan data Employee jika ada
+            // Mengembalikan data Employee jika ada menggunakan handler
             return Ok(new ResponseOkHandler<IEnumerable<EmployeeDto>>(data));  
         }
 
@@ -47,7 +93,7 @@ namespace API.Controllers
             var result = _employeeRepository.GetByGuid(guid);
             if (result is null)
             {
-                // Mengembalikan pesan jika ID tidak ditemukan
+                // Mengembalikan pesan jika ID tidak ditemukan menggunakan error handler
                 return NotFound(new ResponseErrorHandler
                 {
                     Code = StatusCodes.Status404NotFound,
@@ -75,6 +121,7 @@ namespace API.Controllers
             }
             catch (ExceptionHandler ex)
             {
+                // Memunculkan pesan error jika ada kesalahan pada server/database
                 return StatusCode(StatusCodes.Status500InternalServerError, new ResponseErrorHandler
                 {
                     Code = StatusCodes.Status500InternalServerError,
@@ -94,6 +141,7 @@ namespace API.Controllers
                 var entity = _employeeRepository.GetByGuid(employeeDto.Guid);
                 if (entity is null)
                 {
+                    // Mengembalikan pesan jika ID tidak ditemukan menggunakan error handler
                     return NotFound(new ResponseErrorHandler
                     {
                         Code = StatusCodes.Status404NotFound,
@@ -104,7 +152,7 @@ namespace API.Controllers
 
                 Employee toUpdate = employeeDto;
                 toUpdate.CreatedDate = entity.CreatedDate;
-                toUpdate.Nik = entity.Nik;
+                //toUpdate.Nik = entity.Nik;
 
                 _employeeRepository.Update(toUpdate);
 
@@ -112,6 +160,7 @@ namespace API.Controllers
             }
             catch (ExceptionHandler ex)
             {
+                // Memunculkan pesan error jika ada kesalahan pada server/database
                 return StatusCode(StatusCodes.Status500InternalServerError, new ResponseErrorHandler
                 {
                     Code = StatusCodes.Status500InternalServerError,
@@ -131,6 +180,7 @@ namespace API.Controllers
                 var existingEmployee = _employeeRepository.GetByGuid(guid);
                 if (existingEmployee is null)
                 {
+                    // Mengembalikan pesan jika ID tidak ditemukan menggunakan error handler
                     return NotFound(new ResponseErrorHandler
                     {
                         Code = StatusCodes.Status404NotFound,
@@ -145,6 +195,7 @@ namespace API.Controllers
             }
             catch (ExceptionHandler ex)
             {
+                // Memunculkan pesan error jika ada kesalahan pada server/database
                 return StatusCode(StatusCodes.Status500InternalServerError, new ResponseErrorHandler
                 {
                     Code = StatusCodes.Status500InternalServerError,

@@ -4,7 +4,6 @@ namespace API.DTOs.Educations
 {
     public class EducationDto : GeneralEducationDto
     {
-        public Guid Guid { get; set; }
 
         // Operator konversi eksplisit dari Education ke EducationDto
         public static explicit operator EducationDto(Education education)
