@@ -6,6 +6,7 @@ using API.Utilities.Handlers;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using API.Utilities.Validators.Accounts;
+using System.Security.Principal;
 
 namespace API.Controllers
 {
@@ -17,13 +18,15 @@ namespace API.Controllers
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IEducationRepository _educationRepository;
         private readonly IUniversityRepository _universityRepository;
+        private readonly IEmailHandler _emailHandler;
 
-        public AccountController(IAccountRepository accountRepository, IEmployeeRepository employeeRepository, IEducationRepository educationRepository, IUniversityRepository universityRepository)
+        public AccountController(IAccountRepository accountRepository, IEmployeeRepository employeeRepository, IEducationRepository educationRepository, IUniversityRepository universityRepository, IEmailHandler emailHandler)
         {
             _accountRepository = accountRepository;
             _employeeRepository = employeeRepository;
             _educationRepository = educationRepository;
             _universityRepository = universityRepository;
+            _emailHandler = emailHandler;
         }
 
         // Endpoint untuk Login
@@ -78,12 +81,12 @@ namespace API.Controllers
 
         // Endpoint untuk Forgot Password
         [HttpPost("forgot-password")]
-        public IActionResult ForgotPassword(ForgotPasswordDto forgotPasswordDto)
+        public IActionResult ForgotPassword(string email)
         {
             try
             {
                 // Get employee by email
-                Employee? employee = _employeeRepository.GetByEmail(forgotPasswordDto.Email);
+                Employee? employee = _employeeRepository.GetByEmail(email);
 
                 if (employee == null)
                 {
@@ -109,7 +112,9 @@ namespace API.Controllers
 
                 _accountRepository.Update(toUpdate);
 
-                return Ok(new ResponseOkHandler<ForgotPasswordDto>("OTP has been sent to your email or phone."));
+                _emailHandler.Send("Forgot Password", $"Your OTP is {otp}", email);
+
+                return Ok(new ResponseOkHandler<object>("OTP has been sent to your email or phone."));
             }
             catch (ExceptionHandler ex)
             {

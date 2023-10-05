@@ -33,7 +33,7 @@ namespace API.Utilities.Validators.Accounts
             RuleFor(x => x.Password)
                 .NotEmpty().WithMessage("Password is required")
                 .MinimumLength(8).WithMessage("Password must be at least 8 characters long")
-                .Matches(@"\d").WithMessage("Password must contain at least one number");
+                .Matches("[0-9]").WithMessage("Password must contain at least one digit");
             
             RuleFor(x => x.ConfirmPassword)
                 .Equal(x => x.Password).WithMessage("Password and confirm password do not match");

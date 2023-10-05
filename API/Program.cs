@@ -18,6 +18,13 @@ builder.Services.AddDbContext<BookingManagementDbContext>(options =>
     options.EnableSensitiveDataLogging();
 });
 
+// Add Email Service to the container
+builder.Services.AddTransient<IEmailHandler, EmailHandler>(_ => new EmailHandler(
+    builder.Configuration["SmtpService:Server"],
+    int.Parse(builder.Configuration["SmtpService:Port"]),
+    builder.Configuration["SmtpService:FromEmailAddress"]
+));
+
 // Add repositories to the container
 builder.Services.AddScoped<IUniversityRepository, UniversityRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
