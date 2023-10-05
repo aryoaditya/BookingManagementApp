@@ -1,6 +1,6 @@
 ﻿namespace API.DTOs.Accounts
 {
-    public class GeneralAccounDto
+    public class GeneralAccountDto
     {
         public Guid Guid { get; set; }
         public string Password { get; set; }

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.DTOs.Accounts
 {
-    public class CreateAccountDto : GeneralAccounDto
+    public class CreateAccountDto : GeneralAccountDto
     {
         // Operator konversi implisit dari CreateAccountDto ke Account
         public static implicit operator Account(CreateAccountDto createAccountDto)

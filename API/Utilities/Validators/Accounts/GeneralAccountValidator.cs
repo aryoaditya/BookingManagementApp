@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.Utilities.Validators.Accounts
 {
-    public class GeneralAccountValidator<T> : AbstractValidator<T> where T : GeneralAccounDto
+    public class GeneralAccountValidator<T> : AbstractValidator<T> where T : GeneralAccountDto
     {
         public GeneralAccountValidator()
         {

@@ -2,7 +2,7 @@
 
 namespace API.DTOs.Accounts
 {
-    public class AccountDto : GeneralAccounDto
+    public class AccountDto : GeneralAccountDto
     {
         // Operator konversi eksplisit dari Account ke AccountDto
         public static explicit operator AccountDto(Account account)

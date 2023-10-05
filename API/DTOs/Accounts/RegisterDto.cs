@@ -1,12 +1,12 @@
-﻿using API.DTOs.Accounts;
-using API.DTOs.Educations;
+﻿using API.DTOs.Educations;
+using API.DTOs.Employees;
 using API.DTOs.Universities;
 using API.Models;
 using API.Utilities.Enums;
 
-namespace API.DTOs.Employees
+namespace API.DTOs.Accounts
 {
-    public class RegisterEmployeeDto : GeneralEmployeeDto
+    public class RegisterDto : GeneralEmployeeDto
     {
         public string Major { get; set; }
         public string Degree { get; set; }
@@ -17,7 +17,7 @@ namespace API.DTOs.Employees
         public string ConfirmPassword { get; set; }
 
         // Operator konversi implisit dari CreateEmployeeDto ke Employee
-        public static implicit operator Employee(RegisterEmployeeDto registerEmployeeDto)
+        public static implicit operator Employee(RegisterDto registerEmployeeDto)
         {
             return new Employee
             {
@@ -34,7 +34,7 @@ namespace API.DTOs.Employees
         }
 
         // Operator konversi implisit dari CreateEmployeeDto ke Employee
-        public static implicit operator Education(RegisterEmployeeDto registerEmployeeDto)
+        public static implicit operator Education(RegisterDto registerEmployeeDto)
         {
             return new Education
             {
@@ -47,7 +47,7 @@ namespace API.DTOs.Employees
         }
 
         // Operator implisit yang memungkinkan konversi dari CreateUniversityDto ke University.
-        public static implicit operator University(RegisterEmployeeDto registerEmployeeDto)
+        public static implicit operator University(RegisterDto registerEmployeeDto)
         {
             // Menginisialisasi entitas University dengan data dari CreateUniversityDto.
             return new University
@@ -59,7 +59,7 @@ namespace API.DTOs.Employees
             };
         }
 
-        public static implicit operator Account(RegisterEmployeeDto registerEmployeeDto)
+        public static implicit operator Account(RegisterDto registerEmployeeDto)
         {
             return new Account
             {
