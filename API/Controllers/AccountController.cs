@@ -5,8 +5,6 @@ using API.Models;
 using API.Utilities.Handlers;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using API.Utilities.Validators.Accounts;
-using System.Security.Principal;
 
 namespace API.Controllers
 {
@@ -100,7 +98,7 @@ namespace API.Controllers
                 }
 
                 // Get account dari Guid employee
-                var account = _accountRepository.GetByGuid(employee.Guid);                
+                var account = _accountRepository.GetByGuid(employee.Guid);
 
                 // Buat OTP secara acak
                 var otp = _accountRepository.GenerateRandomOtp();
@@ -406,6 +404,5 @@ namespace API.Controllers
                 });
             }
         }
-
     }
 }

@@ -101,7 +101,6 @@ namespace API.Controllers
                 _roleRepository.Update(toUpdate);
 
                 return Ok(new ResponseOkHandler<RoleDto>("Data updated successfully")); // Mengembalikan pesan sukses jika pembaruan berhasil
-
             }
             catch (ExceptionHandler ex)
             {
@@ -147,6 +146,5 @@ namespace API.Controllers
                 });
             }
         }
-
     }
 }

@@ -75,13 +75,13 @@ namespace API.Controllers
                     Code = StatusCodes.Status404NotFound,
                     Status = HttpStatusCode.NotFound.ToString(),
                     Message = "Data Not Found"
-                }); 
+                });
             }
 
             var data = result.Select(x => (EmployeeDto)x);
 
             // Mengembalikan data Employee jika ada menggunakan handler
-            return Ok(new ResponseOkHandler<IEnumerable<EmployeeDto>>(data));  
+            return Ok(new ResponseOkHandler<IEnumerable<EmployeeDto>>(data));
         }
 
         // HTTP GET untuk mengambil data Employee berdasarkan GUID
@@ -97,9 +97,9 @@ namespace API.Controllers
                     Code = StatusCodes.Status404NotFound,
                     Status = HttpStatusCode.NotFound.ToString(),
                     Message = "ID Not Found"
-                }); 
+                });
             }
-            
+
             // Mengembalikan data Employee jika ditemukan
             return Ok(new ResponseOkHandler<EmployeeDto>((EmployeeDto)result));
         }
@@ -127,7 +127,7 @@ namespace API.Controllers
                     Message = "Failed to create data",
                     Error = ex.Message
                 });
-            }             
+            }
         }
 
         // HTTP PUT untuk memperbarui data Employee berdasarkan GUID

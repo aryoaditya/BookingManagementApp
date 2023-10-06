@@ -80,7 +80,6 @@ namespace API.Controllers
                     Error = ex.Message
                 });
             }
-            
         }
 
         // HTTP PUT untuk memperbarui data Education berdasarkan GUID
@@ -150,8 +149,6 @@ namespace API.Controllers
                     Error = ex.Message
                 });
             }
-            
         }
-
     }
 }

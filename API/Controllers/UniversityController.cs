@@ -42,7 +42,7 @@ namespace API.Controllers
             }*/
 
             // Mengembalikan data Universitas jika ada
-            return Ok(new ResponseOkHandler<IEnumerable<UniversityDto>>(data));  
+            return Ok(new ResponseOkHandler<IEnumerable<UniversityDto>>(data));
         }
 
         // HTTP GET untuk mengambil data Universitas berdasarkan GUID
@@ -58,11 +58,11 @@ namespace API.Controllers
                     Code = StatusCodes.Status404NotFound,
                     Status = HttpStatusCode.NotFound.ToString(),
                     Message = "ID Not Found"
-                }); 
+                });
             }
 
             // Mengembalikan data Universitas jika ditemukan
-            return Ok(new ResponseOkHandler<UniversityDto>((UniversityDto)result));  
+            return Ok(new ResponseOkHandler<UniversityDto>((UniversityDto)result));
         }
 
         // HTTP POST untuk membuat data Universitas baru
@@ -74,7 +74,7 @@ namespace API.Controllers
                 var result = _universityRepository.Create(universityDto);
 
                 // Mengembalikan data Universitas yang baru saja dibuat
-                return Ok(new ResponseOkHandler<UniversityDto>((UniversityDto)result)); 
+                return Ok(new ResponseOkHandler<UniversityDto>((UniversityDto)result));
             }
             catch (ExceptionHandler ex)
             {
@@ -111,7 +111,7 @@ namespace API.Controllers
                 _universityRepository.Update(toUpdate);
 
                 // Mengembalikan pesan sukses jika pembaruan berhasil
-                return Ok(new ResponseOkHandler<UniversityDto>("Data updated successfully")); 
+                return Ok(new ResponseOkHandler<UniversityDto>("Data updated successfully"));
             }
             catch (ExceptionHandler ex)
             {
@@ -122,7 +122,7 @@ namespace API.Controllers
                     Message = "Failed to update data",
                     Error = ex.Message
                 });
-            }            
+            }
         }
 
         // HTTP DELETE untuk menghapus data Universitas berdasarkan GUID

@@ -31,7 +31,7 @@ namespace API.Controllers
                     Code = StatusCodes.Status404NotFound,
                     Status = HttpStatusCode.NotFound.ToString(),
                     Message = "Data Not Found"
-                }); 
+                });
             }
 
             var data = result.Select(x => (RoomDto)x);
@@ -52,7 +52,7 @@ namespace API.Controllers
                     Code = StatusCodes.Status404NotFound,
                     Status = HttpStatusCode.NotFound.ToString(),
                     Message = "ID Not Found"
-                }); 
+                });
             }
             return Ok(new ResponseOkHandler<RoomDto>((RoomDto)result));  // Mengembalikan data Room jika ditemukan
         }
@@ -78,7 +78,6 @@ namespace API.Controllers
                     Error = ex.Message
                 });
             }
-            
         }
 
         // HTTP PUT untuk memperbarui data Room berdasarkan GUID
@@ -106,7 +105,7 @@ namespace API.Controllers
                     Message = "Failed to update data",
                     Error = ex.Message
                 });
-            }            
+            }
         }
 
         // HTTP DELETE untuk menghapus data Room berdasarkan GUID

@@ -79,7 +79,6 @@ namespace API.Controllers
                     Error = ex.Message
                 });
             }
-            
         }
 
         // HTTP PUT untuk memperbarui data Booking berdasarkan GUID
@@ -150,6 +149,5 @@ namespace API.Controllers
                 });
             }
         }
-
     }
 }
