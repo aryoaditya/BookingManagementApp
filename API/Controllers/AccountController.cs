@@ -2,33 +2,45 @@
 using API.DTOs.Accounts;
 using API.DTOs.Employees;
 using API.Models;
+using API.Repositories;
 using API.Utilities.Handlers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Security.Claims;
+using System.Security.Principal;
 
 namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class AccountController : ControllerBase
     {
         private readonly IAccountRepository _accountRepository;
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IEducationRepository _educationRepository;
         private readonly IUniversityRepository _universityRepository;
+        private readonly IAccountRoleRepository _accountRoleRepository;
+        private readonly IRoleRepository _roleRepository;
         private readonly IEmailHandler _emailHandler;
+        private readonly ITokenHandler _tokenHandler;
 
-        public AccountController(IAccountRepository accountRepository, IEmployeeRepository employeeRepository, IEducationRepository educationRepository, IUniversityRepository universityRepository, IEmailHandler emailHandler)
+        public AccountController(IAccountRepository accountRepository, IEmployeeRepository employeeRepository, IEducationRepository educationRepository, IUniversityRepository universityRepository, IEmailHandler emailHandler, ITokenHandler tokenHandler, IAccountRoleRepository accountRoleRepository, IRoleRepository roleRepository)
         {
             _accountRepository = accountRepository;
             _employeeRepository = employeeRepository;
             _educationRepository = educationRepository;
             _universityRepository = universityRepository;
             _emailHandler = emailHandler;
+            _tokenHandler = tokenHandler;
+            _accountRoleRepository = accountRoleRepository;
+            _roleRepository = roleRepository;
         }
 
         // Endpoint untuk Login
         [HttpPost("login")]
+        [AllowAnonymous]
         public IActionResult Login(LoginDto loginDto)
         {
             try
@@ -62,8 +74,24 @@ namespace API.Controllers
                     });
                 }
 
+                var claims = new List<Claim>();
+                claims.Add(new Claim("Email", employee.Email));
+                claims.Add(new Claim("FullName", string.Concat(employee.FirstName + " " + employee.LastName)));
+
+                var getRoleName = from ar in _accountRoleRepository.GetAll()
+                                  join r in _roleRepository.GetAll() on ar.RoleGuid equals r.Guid
+                                  where ar.AccountGuid == account.Guid
+                                  select r.Name;
+
+                foreach (var roleName in getRoleName)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, roleName));
+                }
+
+                var generateToken = _tokenHandler.Generate(claims);
+
                 // Jika login berhasil,
-                return Ok(new ResponseOkHandler<LoginDto>("Login success"));
+                return Ok(new ResponseOkHandler<object>("Login success", new { Token = generateToken }));
             }
             catch (ExceptionHandler ex)
             {
@@ -79,6 +107,7 @@ namespace API.Controllers
 
         // Endpoint untuk Forgot Password
         [HttpPost("forgot-password")]
+        [AllowAnonymous]
         public IActionResult ForgotPassword(string email)
         {
             try
@@ -128,6 +157,7 @@ namespace API.Controllers
 
         // Endpoint untuk register
         [HttpPost("register")]
+        [AllowAnonymous]
         public IActionResult Register(RegisterDto registerDto)
         {
             using var transaction = _employeeRepository.BeginTransaction(); // Mulai transaksi
@@ -164,6 +194,13 @@ namespace API.Controllers
                 newAccount.Password = HashingHandler.HashPassword(newAccount.Password);
                 _accountRepository.Create(newAccount);
 
+                // Buat accountRole
+                var accountRole = _accountRoleRepository.Create(new AccountRole
+                {
+                    AccountGuid = newAccount.Guid,
+                    RoleGuid = _roleRepository.GetDefaultRoleGuid() ?? throw new Exception("Default Role Not Found")
+                });
+
                 // Commit transaksi jika semuanya berhasil
                 transaction.Commit();
 
@@ -186,6 +223,7 @@ namespace API.Controllers
 
         // Endpoint untuk Change Password
         [HttpPost("change-password")]
+        [AllowAnonymous]
         public IActionResult ChangePassword(ChangePasswordDto changePasswordDto)
         {
             try
@@ -271,6 +309,7 @@ namespace API.Controllers
 
         // HTTP GET untuk mengambil semua data Account
         [HttpGet]
+        [Authorize(Roles = "manager, admin")]
         public IActionResult GetAll()
         {
             var result = _accountRepository.GetAll();
