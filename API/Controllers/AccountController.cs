@@ -2,13 +2,11 @@
 using API.DTOs.Accounts;
 using API.DTOs.Employees;
 using API.Models;
-using API.Repositories;
 using API.Utilities.Handlers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Security.Claims;
-using System.Security.Principal;
 
 namespace API.Controllers
 {
@@ -74,10 +72,12 @@ namespace API.Controllers
                     });
                 }
 
+                // Menambahkan daftar claim (informasi data client)
                 var claims = new List<Claim>();
                 claims.Add(new Claim("Email", employee.Email));
                 claims.Add(new Claim("FullName", string.Concat(employee.FirstName + " " + employee.LastName)));
 
+                // Mendapatkan role ketika login
                 var getRoleName = from ar in _accountRoleRepository.GetAll()
                                   join r in _roleRepository.GetAll() on ar.RoleGuid equals r.Guid
                                   where ar.AccountGuid == account.Guid
@@ -88,6 +88,7 @@ namespace API.Controllers
                     claims.Add(new Claim(ClaimTypes.Role, roleName));
                 }
 
+                // Generate token
                 var generateToken = _tokenHandler.Generate(claims);
 
                 // Jika login berhasil,
@@ -194,7 +195,7 @@ namespace API.Controllers
                 newAccount.Password = HashingHandler.HashPassword(newAccount.Password);
                 _accountRepository.Create(newAccount);
 
-                // Buat accountRole
+                // Buat accountRole "user"
                 var accountRole = _accountRoleRepository.Create(new AccountRole
                 {
                     AccountGuid = newAccount.Guid,

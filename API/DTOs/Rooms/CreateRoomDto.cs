@@ -9,7 +9,7 @@ namespace API.DTOs.Rooms
         {
             return new Room
             {
-                Name = createRoomDto.Name,
+                Name = createRoomDto.RoomName,
                 Floor = createRoomDto.Floor,
                 Capacity = createRoomDto.Capacity,
                 CreatedDate = DateTime.Now,

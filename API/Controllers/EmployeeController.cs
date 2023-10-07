@@ -2,6 +2,7 @@
 using API.DTOs.Employees;
 using API.Models;
 using API.Utilities.Handlers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -9,6 +10,7 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeRepository _employeeRepository;
@@ -24,6 +26,7 @@ namespace API.Controllers
 
         // Endpoint untuk menampilkan detail Employee dengan join
         [HttpGet("details")]
+        [Authorize(Roles = "manager, admin")]
         public IActionResult GetDetails()
         {
             var employees = _employeeRepository.GetAll();
@@ -171,6 +174,7 @@ namespace API.Controllers
 
         // HTTP DELETE untuk menghapus data Employee berdasarkan GUID
         [HttpDelete("{guid}")]
+        [Authorize(Roles = "admin")]
         public IActionResult Delete(Guid guid)
         {
             try

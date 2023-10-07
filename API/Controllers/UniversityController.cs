@@ -2,6 +2,7 @@
 using API.DTOs.Universities;
 using API.Models;
 using API.Utilities.Handlers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -9,6 +10,7 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class UniversityController : ControllerBase
     {
         private readonly IUniversityRepository _universityRepository;
@@ -90,6 +92,7 @@ namespace API.Controllers
 
         // HTTP PUT untuk memperbarui data Universitas berdasarkan GUID
         [HttpPut]
+        [Authorize(Roles = "admin")]
         public IActionResult Update(UniversityDto universityDto)
         {
             try
@@ -127,6 +130,7 @@ namespace API.Controllers
 
         // HTTP DELETE untuk menghapus data Universitas berdasarkan GUID
         [HttpDelete("{guid}")]
+        [Authorize(Roles = "admin")]
         public IActionResult Delete(Guid guid)
         {
             try

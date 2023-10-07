@@ -2,6 +2,7 @@
 using API.DTOs.Educations;
 using API.Models;
 using API.Utilities.Handlers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -9,6 +10,7 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class EducationController : ControllerBase
     {
         private readonly IEducationRepository _educationRepository;
@@ -120,6 +122,7 @@ namespace API.Controllers
 
         // HTTP DELETE untuk menghapus data Education berdasarkan GUID
         [HttpDelete("{guid}")]
+        [Authorize(Roles = "admin")]
         public IActionResult Delete(Guid guid)
         {
             try

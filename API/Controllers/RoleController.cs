@@ -2,6 +2,7 @@
 using API.DTOs.Roles;
 using API.Models;
 using API.Utilities.Handlers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -9,6 +10,7 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class RoleController : ControllerBase
     {
         private readonly IRoleRepository _roleRepository;
@@ -58,6 +60,7 @@ namespace API.Controllers
 
         // HTTP POST untuk membuat data Role baru
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult Create(CreateRoleDto roleDto)
         {
             try
@@ -80,6 +83,7 @@ namespace API.Controllers
 
         // HTTP PUT untuk memperbarui data Role berdasarkan GUID
         [HttpPut]
+        [Authorize(Roles = "admin")]
         public IActionResult Update(RoleDto roleDto)
         {
             try
@@ -116,6 +120,7 @@ namespace API.Controllers
 
         // HTTP DELETE untuk menghapus data Role berdasarkan GUID
         [HttpDelete("{guid}")]
+        [Authorize(Roles = "admin")]
         public IActionResult Delete(Guid guid)
         {
             try
