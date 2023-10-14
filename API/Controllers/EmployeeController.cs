@@ -10,7 +10,6 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeRepository _employeeRepository;
@@ -26,7 +25,6 @@ namespace API.Controllers
 
         // Endpoint untuk menampilkan detail Employee dengan join
         [HttpGet("details")]
-        [Authorize(Roles = "manager, admin")]
         public IActionResult GetDetails()
         {
             var employees = _employeeRepository.GetAll();
@@ -118,7 +116,7 @@ namespace API.Controllers
                 var result = _employeeRepository.Create(toCreate);
 
                 // Mengembalikan data Employee yang baru saja dibuat
-                return Ok(new ResponseOkHandler<EmployeeDto>((EmployeeDto)result));
+                return Ok(new ResponseOkHandler<EmployeeDto>("Employee added successfully", (EmployeeDto)result));
             }
             catch (ExceptionHandler ex)
             {
@@ -127,7 +125,7 @@ namespace API.Controllers
                 {
                     Code = StatusCodes.Status500InternalServerError,
                     Status = HttpStatusCode.InternalServerError.ToString(),
-                    Message = "Failed to create data",
+                    Message = "Failed to add employee data",
                     Error = ex.Message
                 });
             }
@@ -135,7 +133,7 @@ namespace API.Controllers
 
         // HTTP PUT untuk memperbarui data Employee berdasarkan GUID
         [HttpPut]
-        public IActionResult Update(EmployeeDto employeeDto)
+        public IActionResult Update(UpdateEmployeeDto employeeDto)
         {
             try
             {
@@ -174,7 +172,6 @@ namespace API.Controllers
 
         // HTTP DELETE untuk menghapus data Employee berdasarkan GUID
         [HttpDelete("{guid}")]
-        [Authorize(Roles = "admin")]
         public IActionResult Delete(Guid guid)
         {
             try

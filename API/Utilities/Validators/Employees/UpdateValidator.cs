@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace API.Utilities.Validators.Employees
 {
-    public class UpdateValidator : GeneralEmployeeValidator<EmployeeDto>
+    public class UpdateValidator : GeneralEmployeeValidator<UpdateEmployeeDto>
     {
-        public UpdateValidator() : base ()
+        public UpdateValidator() : base()
         {
             // Nik validation
             RuleFor(e => e.Nik)

@@ -23,6 +23,5 @@ namespace API.DTOs.Employees
                 ModifiedDate = DateTime.Now
             };
         }
-
     }
 }
