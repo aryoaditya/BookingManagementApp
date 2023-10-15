@@ -29,40 +29,44 @@
                             <!-- Name -->
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="firstName">First name</label>
+                                    <label for="firstName" class="form-label">First name</label>
                                     <input type="text" class="form-control" id="firstName" name="firstName" required>
                                     <div class="invalid-feedback">
                                         First name is required.
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="lastName">Last name</label>
+                                    <label for="lastName" class="form-label">Last name</label>
                                     <input type="text" class="form-control" id="lastName" name="lastName" placeholder="" value="">
                                 </div>
                             </div>
-                            <!-- Birth Date -->
-                            <div class="mb-3">
-                                <label for="birthDate">Birth Date</label>
-                                <input type="date" class="form-control" id="birthDate" name="birthDate" required>
-                                <div class="valid-feedback">
-                                    Please enter birth date
+                            <!-- Birth and Gender -->
+                            <div class="row">
+                                <!-- Birth Date -->
+                                <div class="col col-6 mb-3">
+                                    <label for="birthDate" class="form-label">Birth Date</label>
+                                    <input type="date" class="form-control" id="birthDate" name="birthDate" required>
+                                    <div class="valid-feedback">
+                                        Please enter birth date
+                                    </div>
+                                </div>
+                                <!-- Gender -->
+                                <div class="col col-6 mb-3">
+                                    <label for="gender" class="form-label">Gender</label>
+                                    <select class="form-select" aria-label="Select gender" id="gender" name="gender" required>
+                                        <option selected disabled value="">Select gender</option>
+                                        <option value=0>Female</option>
+                                        <option value=1>Male</option>
+                                    </select>
+                                    <div class="valid-feedback">
+                                        Please select gender
+                                    </div>
                                 </div>
                             </div>
-                            <!-- Gender -->
-                            <div class="mb-3">
-                                <label for="gender">Gender</label>
-                                <select class="form-select" aria-label="Select gender" id="gender" name="gender" required>
-                                    <option selected disabled value="">Select gender</option>
-                                    <option value=0>Female</option>
-                                    <option value=1>Male</option>
-                                </select>
-                                <div class="valid-feedback">
-                                    Please select gender
-                                </div>
-                            </div>
+                            
                             <!-- Email -->
                             <div class="mb-3">
-                                <label for="email">Email</label>
+                                <label for="email" class="form-label">Email</label>
                                 <input type="email" class="form-control" id="email" name="email" placeholder="you@example.com" required>
                                 <div class="invalid-feedback">
                                     Please enter a valid email address.
@@ -70,7 +74,7 @@
                             </div>
                             <!-- Phone Number -->
                             <div class="mb-3">
-                                <label for="phone-number">Phone Number</label>
+                                <label for="phone-number" class="form-label">Phone Number</label>
                                 <input type="text" class="form-control" id="phone-number" name="phoneNumber" required>
                                 <div class="invalid-feedback">
                                     Please enter your phone number.
@@ -78,7 +82,7 @@
                             </div>
                             <!-- Hiring Date -->
                             <div class="mb-3">
-                                <label for="hiringDate">Hiring Date</label>
+                                <label for="hiringDate" class="form-label">Hiring Date</label>
                                 <input type="date" class="form-control" id="hiringDate" name="hiringDate" required>
                                 <div class="valid-feedback">
                                     Please enter hiring date.
@@ -106,60 +110,64 @@
                     <div class="modal-body">
                         <div class="container">
                             <div id="edit-fail" class="alert alert-danger" style="display: none;"></div>
-                            @* NIK *@
+                            <!-- NIK -->
                             <div class="mb-3">
-                                <label for="nik">NIK</label>
+                                <label for="nik" class="form-label">NIK</label>
                                 <input id="editNik" class="form-control" type="text" placeholder="" aria-label="Disabled input NIK" disabled>
                             </div>
-                            @* Name *@
+                            <!-- Name -->
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="firstName">First name</label>
+                                    <label for="firstName" class="form-label">First name</label>
                                     <input type="text" class="form-control" id="editFirstName" name="firstName" placeholder="" value="Aryo" required="">
                                     <div class="invalid-feedback">
                                         Valid first name is required.
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="lastName">Last name</label>
+                                    <label for="lastName" class="form-label">Last name</label>
                                     <input type="text" class="form-control" id="editLastName" name="lastName" placeholder="" value="" required="">
                                     <div class="invalid-feedback">
                                         Valid last name is required.
                                     </div>
                                 </div>
                             </div>
-                            @* Birth Date *@
-                            <div class="mb-3">
-                                <label for="birthDate">Birth Date</label>
-                                <input type="date" class="form-control" id="editBirthDate" name="birthDate" value="2013-08-01">
+                            <!-- Birth and Gender -->
+                            <div class="row">
+                                <!-- Birth Date -->
+                                <div class="col col-6 mb-3">
+                                    <label for="birthDate" class="form-label">Birth Date</label>
+                                    <input type="date" class="form-control" id="editBirthDate" name="birthDate">
+                                </div>
+                                <!-- Gender -->
+                                <div class="col col-6 mb-3">
+                                    <label for="gender" class="form-label">Gender</label>
+                                    <select class="form-select" aria-label="Select gender" id="editGender" name="gender">
+                                        <option id="female" value=0>Female</option>
+                                        <option id="male" value=1>Male</option>
+                                    </select>
+                                </div>
                             </div>
-                            @* Gender *@
+                            
+                            <!-- Email -->
                             <div class="mb-3">
-                                <label for="gender">Gender</label>
-                                <select class="form-select" aria-label="Select gender" id="editGender" name="gender">
-                                    <option id="female" value=0>Female</option>
-                                    <option id="male" value=1>Male</option>
-                                </select>
-                            </div>
-                            @* email *@
-                            <div class="mb-3">
-                                <label for="email">Email</label>
+                                <label for="email" class="form-label">Email</label>
                                 <input type="email" class="form-control" id="editEmail" name="email" placeholder="you@example.com">
                                 <div class="invalid-feedback">
                                     Please enter a valid email address for shipping updates.
                                 </div>
                             </div>
-                            @* Phone Number *@
+                            <!-- Phone Number -->
                             <div class="mb-3">
-                                <label for="phone-number">Phone Number</label>
+                                <label for="phone-number" class="form-label">Phone Number</label>
                                 <input type="text" class="form-control" id="editPhoneNumber" name="phoneNumber">
                                 <div class="invalid-feedback">
                                     Please enter your phone number.
                                 </div>
                             </div>
-                            @* Hiring Date *@
+                            <!-- Hiring Date -->
                             <div class="mb-3">
-                                <label for="hiringDate">Hiring Date</label>
+                                <label for="hiringDate" class="form-label">Hiring Date</label>
                                 <input type="date" class="form-control" id="editHiringDate" name="hiringDate">
                             </div>
                         </div>
@@ -217,7 +225,6 @@
 
 @section Scripts{
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>

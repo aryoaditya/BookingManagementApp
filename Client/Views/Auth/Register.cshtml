@@ -1,7 +1,7 @@
 ﻿@{
     Layout = "_AuthLayout";
 }
-<div class="col-md-8 col-lg-6 col-xxl-3">
+<div class="col-md-8 col-lg-6 col-xxl-3" style="width:60%;">
     <div class="card mb-0">
         <div class="card-body">
             <a href="../" class="text-nowrap logo-img text-center d-block py-3 w-100">
@@ -9,19 +9,103 @@
             </a>
             <p class="text-center">Book a Room Easily</p>
             <form>
-                <div class="mb-3">
-                    <label for="exampleInputtext1" class="form-label">Name</label>
-                    <input type="text" class="form-control" id="exampleInputtext1" aria-describedby="textHelp">
+                <!-- Name -->
+                <div class="row">
+                    <div class="col col-6 mb-3">
+                        <label for="firstName" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="firstName" aria-describedby="textHelp">
+                    </div>
+                    <div class="col col-6 mb-3">
+                        <label for="lastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" aria-describedby="textHelp">
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">Email Address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                <!-- Birth and Gender -->
+                <div class="row">
+                    <!-- Birth Date -->
+                    <div class="col col-6 mb-3">
+                        <label for="birthDate" class="form-label">Birth Date</label>
+                        <input type="date" class="form-control" id="birthDate" name="birthDate" required>
+                        <div class="valid-feedback">
+                            Please enter birth date
+                        </div>
+                    </div>
+                    <!-- Gender -->
+                    <div class="col col-6 mb-3">
+                        <label for="gender" class="form-label">Gender</label>
+                        <select class="form-select" aria-label="Select gender" id="gender" name="gender" required>
+                            <option selected disabled value="">Select gender</option>
+                            <option value=0>Female</option>
+                            <option value=1>Male</option>
+                        </select>
+                        <div class="valid-feedback">
+                            Please select gender
+                        </div>
+                    </div>
                 </div>
+                <!-- Hiring Date -->
+                <div class="mb-3">
+                    <label for="hiringDate" class="form-label">Hiring Date</label>
+                    <input type="date" class="form-control" id="hiringDate" name="hiringDate" required>
+                    <div class="valid-feedback">
+                        Please enter hiring date.
+                    </div>
+                </div>
+                <!-- University -->
+                <div class="row">
+                    <!-- University Code -->
+                    <div class="col col-6 mb-3">
+                        <label for="univCode" class="form-label">University Code</label>
+                        <input type="text" class="form-control" placeholder="IPB" id="univCode" aria-describedby="textHelp">
+                    </div>
+                    <!-- University Code -->
+                    <div class="col col-6 mb-3">
+                        <label for="univName" class="form-label">University Name</label>
+                        <input type="text" class="form-control" placeholder="Institut Pertanian Bogor" id="univName" aria-describedby="textHelp">
+                    </div>
+                </div>
+                <!-- Education Detail -->
+                <div class="row">
+                    <!-- Major -->
+                    <div class="col col-4 mb-3">
+                        <label for="major" class="form-label">Major</label>
+                        <input type="text" class="form-control"  id="major" aria-describedby="textHelp">
+                    </div>
+                    <!-- Degree -->
+                    <div class="col col-4 mb-3">
+                        <label for="degree" class="form-label">Degree</label>
+                        <input type="text" class="form-control"  id="degree" aria-describedby="textHelp">
+                    </div>
+                    <!-- GPA -->
+                    <div class="col col-4 mb-3">
+                        <label for="gpa" class="form-label">GPA</label>
+                        <input type="text" class="form-control" placeholder="4.00" id="gpa" aria-describedby="textHelp">
+                    </div>
+                </div>
+                <!-- Email -->
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" class="form-control" id="email" aria-describedby="textHelp">
+                </div>
+                <!-- Phone Number -->
+                <div class="mb-3">
+                    <label for="phone-number" class="form-label">Phone Number</label>
+                    <input type="text" class="form-control" id="phone-number" name="phoneNumber" required>
+                    <div class="invalid-feedback">
+                        Please enter your phone number.
+                    </div>
+                </div>
+                <!-- Password -->
                 <div class="mb-4">
-                    <label for="exampleInputPassword1" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password">
                 </div>
-                <a href="./index.html" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Sign Up</a>
+                <!-- Password Confirmation-->
+                <div class="mb-4">
+                    <label for="passwordConfirm" class="form-label">Password Confirmation</label>
+                    <input type="password" class="form-control" id="passwordConfirm">
+                </div>
+                <a id="registerBtn" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Sign Up</a>
                 <div class="d-flex align-items-center justify-content-center">
                     <p class="fs-4 mb-0 fw-bold">Already have an Account?</p>
                     <a class="text-primary fw-bold ms-2" href="../auth/login">Sign In</a>
@@ -30,3 +114,7 @@
         </div>
     </div>
 </div>
+
+@section Scripts{
+    <script src="~/js/register.js"></script>
+}
