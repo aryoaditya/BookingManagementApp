@@ -3,9 +3,9 @@
 }
 
 <div class="container">
-    <div id="successAlert" class="alert alert-success" style="display: none;">
+    @* <div id="successAlert" class="alert alert-success" style="display: none;">
     </div>
-    <div id="failAlert" class="alert alert-danger alert-dismissible fade show" style="display: none;"></div>
+    <div id="failAlert" class="alert alert-danger alert-dismissible fade show" style="display: none;"></div> *@
     <h1 class="text-center">Employee List</h1>
     <!-- Add Employee Buttom -->
     <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#employee-modal">
@@ -25,7 +25,7 @@
                 <form id="employeeForm" class="needs-validation" novalidate>
                     <div class="modal-body">
                         <div class="container">
-                            <div id="add-fail" class="alert alert-danger" style="display: none;"></div>
+                            @* <div id="add-fail" class="alert alert-danger" style="display: none;"></div> *@
                             <!-- Name -->
                             <div class="row">
                                 <div class="col-md-6 mb-3">
@@ -109,7 +109,7 @@
                 <form id="editEmployeeForm" class="needs-validation" novalidate="">
                     <div class="modal-body">
                         <div class="container">
-                            <div id="edit-fail" class="alert alert-danger" style="display: none;"></div>
+                            @* <div id="edit-fail" class="alert alert-danger" style="display: none;"></div> *@
                             <!-- NIK -->
                             <div class="mb-3">
                                 <label for="nik" class="form-label">NIK</label>
@@ -224,6 +224,7 @@
 }
 
 @section Scripts{
+    <script src="~/assets/sweetalert/dist/sweetalert2.all.min.js" asp-append-version="true"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>

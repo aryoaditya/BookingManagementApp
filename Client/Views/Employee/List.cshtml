@@ -1,0 +1,90 @@
+﻿@model IEnumerable<API.DTOs.Employees.EmployeeDto>
+
+@{
+    ViewData["Title"] = "List";
+    Layout = "_Layout";
+}
+
+<h1>Employee List</h1>
+
+<p>
+    @* <button type="button" class="btn btn-primary">Primary</button> *@
+    <a href='./CreateEmp' class="btn btn-primary">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BirthDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HiringDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </th>
+            @* <th>
+                @Html.DisplayNameFor(model => model.Guid)
+            </th> *@
+            <th>
+                @Html.DisplayNameFor(model => model.Nik)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Gender)
+            </th>
+            <th>
+                Action
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BirthDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HiringDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhoneNumber)
+            </td>
+            @* <td>
+                @Html.DisplayFor(modelItem => item.Guid)
+            </td> *@
+            <td>
+                @Html.DisplayFor(modelItem => item.Nik)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Gender)
+            </td>
+            <td>
+                    <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Edit", new { guid = item.Guid })'"><i class="ti ti-edit"></i></button>
+                    <button type="button" class="btn btn-danger" onclick="location.href='@Url.Action("DeleteEmp", new { guid = item.Guid })'"><i class="ti ti-trash"></i></button>
+                @* @Html.ActionLink("Edit", "Edit", new { guid=item.Guid }) |
+                @Html.ActionLink("Hello", "DeleteEmp", new { guid=item.Guid })
+                    <button id="editButton" class="btn btn-primary"><i class="ti ti-edit"></i></button>
+                    <button id="deleteButton" class="btn btn-danger"><i class="ti ti-trash"></i></button> *@
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

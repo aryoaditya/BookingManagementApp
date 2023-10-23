@@ -1,7 +1,7 @@
 ﻿@{
     Layout = "_AuthLayout";
 }
-<div class="col-md-8 col-lg-6 col-xxl-3" style="width:60%;">
+<div class="col-md-8 col-lg-6 col-xxl-3 my-5" style="width:60%;">
     <div class="card mb-0">
         <div class="card-body">
             <a href="../" class="text-nowrap logo-img text-center d-block py-3 w-100">
@@ -106,9 +106,15 @@
                     <input type="password" class="form-control" id="passwordConfirm">
                 </div>
                 <a id="registerBtn" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Sign Up</a>
+                <!-- Direct to Sign In -->
                 <div class="d-flex align-items-center justify-content-center">
                     <p class="fs-4 mb-0 fw-bold">Already have an Account?</p>
                     <a class="text-primary fw-bold ms-2" href="../auth/login">Sign In</a>
+                </div>
+                <br />
+                <!-- Back to Dashboard -->
+                <div class="d-flex align-items-center justify-content-center">
+                    <a class="text-primary fw-bold ms-2" href="../">Back to Dashboard</a>
                 </div>
             </form>
         </div>

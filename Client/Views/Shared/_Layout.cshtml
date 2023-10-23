@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Booking App</title>
+    <title>Booking App | @ViewData["PageTitle"]</title>
     <link rel="shortcut icon" type="image/png" href="~/assets/images/logos/favicon.png" />
     <link rel="stylesheet" href="~/assets/css/styles.min.css" />
     @await RenderSectionAsync("CssSection", required: false)
@@ -56,7 +56,7 @@
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="#" aria-expanded="false">
+                            <a class="sidebar-link" href="../room" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-door"></i>
                                 </span>
@@ -69,7 +69,7 @@
                             <span class="hide-menu">Booking</span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="#" aria-expanded="false">
+                            <a class="sidebar-link" href="../booking" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-book-2"></i>
                                 </span>
@@ -122,9 +122,9 @@
                             </a>
                         </li>
                     </ul>
-                    <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
+                    <div id="profile" class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-                            <li>Aryo Aditya</li>
+                            <li>@ViewData["FullName"]</li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                                    aria-expanded="false">
@@ -144,7 +144,7 @@
                                             <i class="ti ti-list-check fs-6"></i>
                                             <p class="mb-0 fs-3">My Task</p>
                                         </a>
-                                        <a href="./authentication-login.html" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                                        <a asp-controller="Auth" asp-action="Logout" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
                                     </div>
                                 </div>
                             </li>
@@ -162,6 +162,7 @@
     <script src="~/assets/js/sidebarmenu.js"></script>
     <script src="~/assets/js/app.min.js"></script>
     <script src="~/assets/libs/simplebar/dist/simplebar.js"></script>
+    <script src="~/js/profile.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 

@@ -82,8 +82,12 @@ $(document).ready(function () {
                 "data": null,
                 render: function (data, type, row) {
                     return `<button id="editButton" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editEmployeeModal"><i class="ti ti-edit"></i></button>
-                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="deleteEmployee('${row.guid}')"><i class="ti ti-trash"></i></button>`;
+                            <button id="deleteButton" class="btn btn-danger"><i class="ti ti-trash"></i></button>`;
                 }
+                //render: function (data, type, row) {
+                //    return `<button id="editButton" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editEmployeeModal"><i class="ti ti-edit"></i></button>
+                //            <button id="deleteButton" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="deleteEmployee('${row.guid}')"><i class="ti ti-trash"></i></button>`;
+                //}
             }
         ]
     });
@@ -117,41 +121,115 @@ $(document).ready(function () {
 
         // Ketika click submit edit
         $('#editSubmitEmployee').off('click').on('click', function () {
-            let editedData = {
-                firstName: $('#editFirstName').val(),
-                lastName: $('#editLastName').val(),
-                birthDate: $('#editBirthDate').val(),
-                hiringDate: $('#editHiringDate').val(),
-                gender: parseInt($('#editGender').val()),
-                email: $('#editEmail').val(),
-                phoneNumber: $('#editPhoneNumber').val(),
-                guid: data.guid, // GUID employee yang akan diubah
-                nik: $('#editNik').val()
-            };
+            Swal.fire({
+                title: 'Do you want to save the changes?',
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: 'Save',
+                denyButtonText: `Don't save`,
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    let editedData = {
+                        firstName: $('#editFirstName').val(),
+                        lastName: $('#editLastName').val(),
+                        birthDate: $('#editBirthDate').val(),
+                        hiringDate: $('#editHiringDate').val(),
+                        gender: parseInt($('#editGender').val()),
+                        email: $('#editEmail').val(),
+                        phoneNumber: $('#editPhoneNumber').val(),
+                        guid: data.guid, // GUID employee yang akan diubah
+                        nik: $('#editNik').val()
+                    };
 
-            // Send request ke API
-            $.ajax({
-                url: 'https://localhost:7290/api/Employee',
-                method: 'PUT',
-                contentType: 'application/json',
-                data: JSON.stringify(editedData)
-            }).done((result) => {
-                // Hide Modal
-                $("#editEmployeeModal").modal('hide');
+                    // Send request ke API
+                    $.ajax({
+                        url: 'https://localhost:7290/api/Employee',
+                        method: 'PUT',
+                        contentType: 'application/json',
+                        data: JSON.stringify(editedData)
+                    }).done((result) => {
+                        // Hide Modal
+                        $("#editEmployeeModal").modal('hide');
 
-                // Refresh table
-                $('#employee-table').DataTable().ajax.reload();
+                        // Refresh table
+                        $('#employee-table').DataTable().ajax.reload();
 
-                // Success Alert
-                $("#successAlert").text(result.message).show();
-            }).fail((jqXHR, textStatus, errorThrown) => {
-                let alertMsg = jqXHR.responseJSON.message;
+                        // Success Alert
+                        Swal.fire({
+                            icon: 'success',
+                            title: result.message,
+                            showConfirmButton: false,
+                            timer: 1300
+                        });
+                        //Swal.fire('Saved!', result.message, 'success');
+                        //$("#successAlert").text(result.message).show();
+                    }).fail((jqXHR, textStatus, errorThrown) => {
+                        let alertMsg = jqXHR.responseJSON.message;
 
-                // Fail Alert
-                $("#edit-fail").text(alertMsg).show();
-            });
+                        // Fail Alert
+                        Swal.fire('Employee data failed to update', alertMsg, 'warning');
+                        //$("#edit-fail").text(alertMsg).show();
+                    });
+                } else if (result.isDenied) {
+                    Swal.fire('Changes are not saved', '', 'info')
+                }
+            })
+
             return false;
         });
+    });
+
+    // Delete Employee
+    $('#employee-table').on('click', '#deleteButton', function () {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Ambil data employee dari baris yang sesuai
+                var data = $('#employee-table').DataTable().row($(this).parents('tr')).data();
+                let guid = data.guid;
+                // send DELETE req with 'guid' to API
+                $.ajax({
+                    url: `https://localhost:7290/api/Employee/${guid}`,
+                    type: 'DELETE'
+                }).done((result) => {
+                    // Hide Modal
+                    //$("#deleteModal").modal('hide');
+
+                    // Refresh table
+                    $('#employee-table').DataTable().ajax.reload();
+
+                    // Success Alert
+                    Swal.fire({
+                        icon: 'success',
+                        title: result.message,
+                        showConfirmButton: false,
+                        timer: 1300
+                    });
+                    //Swal.fire(
+                    //    'Deleted!',
+                    //    'Your file has been deleted.',
+                    //    'success'
+                    //);
+                    //$("#successAlert").text(result.message).show();
+                }).fail((jqXHR, textStatus, errorThrown) => {
+                    // Fail Alert
+                    Swal.fire(
+                        'Failed!',
+                        jqXHR.responseJSON.message,
+                        'error'
+                    );
+                    //$("#failAlert").text(jqXHR.responseJSON.message).show();
+                });
+            }
+        })
     });
 });
 
@@ -188,12 +266,20 @@ function submitForm() {
         $('#employee-table').DataTable().ajax.reload();
 
         // Success Alert
-        $("#successAlert").text(result.message).show();
+        Swal.fire({
+            icon: 'success',
+            title: result.message,
+            showConfirmButton: false,
+            timer: 1300
+        });
+
+        //$("#successAlert").text(result.message).show();
     }).fail((jqXHR, textStatus, errorThrown) => {
         let alertMsg = jqXHR.responseJSON.message;
 
         // Fail Alert
-        $("#add-fail").text(alertMsg).show();
+        Swal.fire('Failed to create', alertMsg, 'warning');
+        //$("#add-fail").text(alertMsg).show();
     });
 }
 

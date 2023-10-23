@@ -1,24 +1,30 @@
-﻿@{
+﻿@model API.DTOs.Accounts.LoginDto
+
+@{
+    ViewData["Title"] = "Login";
     Layout = "_AuthLayout";
 }
 
-<div class="col-md-8 col-lg-6 col-xxl-3" style="width:45%;">
+<div class="col-md-8 col-lg-6 col-xxl-3 my-5" style="width:45%;">
     <div class="card mb-0">
         <div class="card-body">
             <a href="../" class="text-nowrap logo-img text-center d-block py-3 w-100">
                 <img src="../assets/images/logos/booking-app.svg" width="180" alt="">
             </a>
             <p class="text-center">Book a Room Easily</p>
-            <form>
+            <form asp-action="Login">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <!-- Email -->
-                <div class="mb-3">
-                    <label for="inputEmail" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp">
+                <div class="form-group mb-3">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
                 <!-- Password -->
-                <div class="mb-4">
-                    <label for="inputPassword" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="inputPassword">
+                <div class="form-group mb-4">
+                    <label asp-for="Password" class="control-label"></label>
+                    <input asp-for="Password" type="password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
                 <!-- Remember and Forgot Password -->
                 <div class="d-flex align-items-center justify-content-between mb-4">
@@ -28,20 +34,27 @@
                             Remeber this Device
                         </label>
                     </div>
-                    <a class="text-primary fw-bold" href="./index.html">Forgot Password ?</a>
+                    <a class="text-primary fw-bold" href="../">Forgot Password ?</a>
                 </div>
                 <!-- Sign In Button -->
-                <a type="submit" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2" id="loginBtn">Sign In</a>
+                <div class="form-group">
+                    <input type="submit" value="Sign In" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2" />
+                </div>
                 <!-- Direct to Register -->
                 <div class="d-flex align-items-center justify-content-center">
                     <p class="fs-4 mb-0 fw-bold">New to BookingApp?</p>
                     <a class="text-primary fw-bold ms-2" href="../auth/register">Create an account</a>
                 </div>
+                <br />
+                <!-- Back to Dashboard -->
+                <div class="d-flex align-items-center justify-content-center">
+                    <a class="text-primary fw-bold ms-2" href="../">Back to Dashboard</a>
+                </div>
             </form>
         </div>
     </div>
-</div>
+</div> 
 
-@section Scripts{
-    <script src="~/js/login.js" asp-append-version="true"></script>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
