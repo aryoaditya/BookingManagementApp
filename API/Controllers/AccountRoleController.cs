@@ -10,7 +10,6 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
     public class AccountRoleController : ControllerBase
     {
         private readonly IAccountRoleRepository _accountRoleRepository;
@@ -122,7 +121,6 @@ namespace API.Controllers
 
         // HTTP DELETE untuk menghapus data AccountRole berdasarkan GUID
         [HttpDelete("{guid}")]
-        [Authorize(Roles = "admin")]
         public IActionResult Delete(Guid guid)
         {
             try

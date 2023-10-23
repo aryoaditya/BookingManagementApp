@@ -31,5 +31,9 @@ namespace API.Utilities.Handlers
             Message = message;
             Data = data;
         }
+
+        public ResponseOkHandler()
+        {
+        }
     }
 }

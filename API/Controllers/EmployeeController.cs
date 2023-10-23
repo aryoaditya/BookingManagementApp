@@ -155,7 +155,7 @@ namespace API.Controllers
 
                 _employeeRepository.Update(toUpdate);
 
-                return Ok(new ResponseOkHandler<EmployeeDto>("Data updated successfully")); // Mengembalikan pesan sukses jika pembaruan berhasil
+                return Ok(new ResponseOkHandler<EmployeeDto>("Employee data updated successfully")); // Mengembalikan pesan sukses jika pembaruan berhasil
             }
             catch (ExceptionHandler ex)
             {

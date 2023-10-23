@@ -74,8 +74,8 @@ namespace API.Controllers
 
                 // Menambahkan daftar claim (informasi data client)
                 var claims = new List<Claim>();
-                claims.Add(new Claim("Email", employee.Email));
-                claims.Add(new Claim("FullName", string.Concat(employee.FirstName + " " + employee.LastName)));
+                claims.Add(new Claim(ClaimTypes.Email, employee.Email));
+                claims.Add(new Claim(ClaimTypes.Name, string.Concat(employee.FirstName + " " + employee.LastName)));
 
                 // Mendapatkan role ketika login
                 var getRoleName = from ar in _accountRoleRepository.GetAll()
@@ -443,6 +443,21 @@ namespace API.Controllers
                     Error = ex.Message
                 });
             }
+        }
+
+        // Endpoint Mendapatkan claims payload
+        [Authorize]
+        [HttpGet("GetClaims/{token}")]
+        public IActionResult GetClaims(string token)
+        {
+            var claims = _tokenHandler.ExtractClaimsFromJwt(token);
+            return Ok(new ResponseOkHandler<ClaimsDTO>
+            {
+                Code = StatusCodes.Status200OK,
+                Status = HttpStatusCode.OK.ToString(),
+                Message = "Claims has been retrieved",
+                Data = claims
+            });
         }
     }
 }

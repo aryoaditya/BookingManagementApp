@@ -9,7 +9,7 @@ namespace API.Utilities.Validators.Rooms
         public GeneralRoomValidator()
         {
             // Name validation
-            RuleFor(r => r.RoomName)
+            RuleFor(r => r.Name)
                 .NotEmpty()
                 .MaximumLength(100);
 

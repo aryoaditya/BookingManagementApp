@@ -13,7 +13,7 @@ namespace API.DTOs.Rooms
             return new RoomDto
             {
                 Guid = room.Guid,
-                RoomName = room.Name,
+                Name = room.Name,
                 Floor = room.Floor,
                 Capacity = room.Capacity
             };
@@ -25,7 +25,7 @@ namespace API.DTOs.Rooms
             return new Room
             {
                 Guid = roomDto.Guid,
-                Name = roomDto.RoomName,
+                Name = roomDto.Name,
                 Floor = roomDto.Floor,
                 Capacity = roomDto.Capacity,
                 ModifiedDate = DateTime.Now

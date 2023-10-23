@@ -10,7 +10,6 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
     public class BookingController : ControllerBase
     {
         private readonly IBookingRepository _bookingRepository;
@@ -268,7 +267,6 @@ namespace API.Controllers
 
         // HTTP DELETE untuk menghapus data Booking berdasarkan GUID
         [HttpDelete("{guid}")]
-        [Authorize(Roles = "admin")]
         public IActionResult Delete(Guid guid)
         {
             try

@@ -10,7 +10,6 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
     public class RoomController : ControllerBase
     {
         private readonly IRoomRepository _roomRepository;
@@ -89,7 +88,7 @@ namespace API.Controllers
                                   select new RoomDto
                                   {
                                       Guid = r.Guid,
-                                      RoomName = r.Name,
+                                      Name = r.Name,
                                       Floor = r.Floor,
                                       Capacity = r.Capacity
                                   };
@@ -149,7 +148,6 @@ namespace API.Controllers
 
         // HTTP POST untuk membuat data Room baru
         [HttpPost]
-        [Authorize(Roles = "admin")]
         public IActionResult Create(CreateRoomDto roomDto)
         {
             try
@@ -173,7 +171,6 @@ namespace API.Controllers
 
         // HTTP PUT untuk memperbarui data Room berdasarkan GUID
         [HttpPut]
-        [Authorize(Roles = "admin")]
         public IActionResult Update(RoomDto roomDto)
         {
             try
@@ -202,7 +199,6 @@ namespace API.Controllers
 
         // HTTP DELETE untuk menghapus data Room berdasarkan GUID
         [HttpDelete("{guid}")]
-        [Authorize(Roles = "admin")]
         public IActionResult Delete(Guid guid)
         {
             try
